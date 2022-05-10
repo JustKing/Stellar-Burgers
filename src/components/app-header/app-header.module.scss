@@ -1,9 +1,19 @@
+%nav-item {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
 nav.nav {
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: space-evenly;
+  & > p {
+    @extend %nav-item;
+    margin: 0;
+  }
   & > ul {
+    @extend %nav-item;
     & > li {
       cursor: pointer;
       color: var(--text-inactive-color);
