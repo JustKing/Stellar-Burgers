@@ -8,6 +8,7 @@ import { ingredients } from '../../interfaces/ingredients';
 
 type Props = {
   ingredients: ingredients.ingredient[];
+  offset: number;
 };
 export default class BurgerIngredients extends React.Component<Props> {
   state = {
@@ -28,17 +29,56 @@ export default class BurgerIngredients extends React.Component<Props> {
     ]
   };
 
+  get sectionsWrapper(): HTMLElement | null {
+    return document.querySelector<HTMLElement>('#ingredients-sections');
+  }
+
+  get offsetTop(): number {
+    return document.querySelector<HTMLElement>('section#bun')?.offsetTop || 0;
+  }
+
+  componentDidMount() {
+    // #TODO
+    // const observer = new IntersectionObserver(
+    //   (entries) => {
+    //     entries.forEach((entry) => {
+    //       if (entry.isIntersecting) {
+    //         console.log(entry.target.id)
+    //         this.setState((prevState) => ({
+    //           ...prevState,
+    //           activeTab: entry.target.id
+    //         }));
+    //       }
+    //     });
+    //   },
+    //   { threshold: [0.5] }
+    // );
+
+    // const buns = document.querySelector<HTMLElement>('section#bun');
+    // const sauces = document.querySelector<HTMLElement>('section#sauce');
+    // const mains = document.querySelector<HTMLElement>('section#main');
+    // if (buns) {
+    //   observer.observe(buns);
+    // }
+    // if (sauces) {
+    //   observer.observe(sauces);
+    // }
+    // if (mains) {
+    //   observer.observe(mains);
+    // }
+  }
+
   setCurrent = (tab: string) => {
     if (tab !== this.state.activeTab) {
       const ingredientsSection = document.querySelector<HTMLElement>(`section#${tab}`);
-
-      setTimeout(() => {
-        window.scrollTo({
-          behavior: ingredientsSection ? 'smooth' : 'auto',
-          top: ingredientsSection ? ingredientsSection.offsetTop : 0
-        });
-      }, 100);
-
+      if (ingredientsSection) {
+        setTimeout(() => {
+          this.sectionsWrapper?.scrollTo({
+            behavior: ingredientsSection ? 'smooth' : 'auto',
+            top: ingredientsSection.offsetTop - this.offsetTop || 0
+          });
+        }, 100);
+      }
       this.setState((prevState) => ({
         ...prevState,
         activeTab: tab
@@ -80,16 +120,20 @@ export default class BurgerIngredients extends React.Component<Props> {
 
   render() {
     return (
-      <div style={{ width: '600px' }}>
+      <div style={{ width: '600px' }} className="mr-5">
         <p className="text text_type_main-large mb-5">Соберите бургер</p>
-        <div style={{ display: 'flex' }}>
+        <div className="flex mb-10">
           {this.state.tabs.map((tab, index) => (
             <Tab value={tab.type} active={this.state.activeTab === tab.type} key={index} onClick={this.setCurrent}>
               {tab.title}
             </Tab>
           ))}
         </div>
-        <div className={burgerIngredientsStyles.ingredients}>
+        <div
+          className={`${burgerIngredientsStyles.ingredients}`}
+          id="ingredients-sections"
+          style={{ height: `calc(100% - ${this.props.offset + 28}px)` }}
+        >
           <BurgerIngredientsSection id="bun" title="Булочки" ingredientsByRow={this.buns} />
           <BurgerIngredientsSection id="sauce" title="Соусы" ingredientsByRow={this.sauces} />
           <BurgerIngredientsSection id="main" title="Начинки" ingredientsByRow={this.mains} />

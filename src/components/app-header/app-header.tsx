@@ -4,7 +4,22 @@ import { Logo, BurgerIcon, ProfileIcon, ListIcon } from '@ya.praktikum/react-dev
 
 import appHeaderStyles from './app-header.module.scss';
 
-export default class AppHeader extends React.Component {
+type Props = {
+  changeOffset: Function;
+};
+
+export default class AppHeader extends React.Component<Props> {
+  componentDidMount() {
+    let offset = 0;
+    const header = document.querySelector<HTMLElement>('header');
+    if (header) {
+      const styles = window.getComputedStyle(header);
+      const margin = parseFloat(styles['marginTop']) + parseFloat(styles['marginBottom']);
+      offset = header.clientHeight + margin;
+    }
+    this.props.changeOffset(offset);
+  }
+
   render() {
     return (
       <header style={{ backgroundColor: '#1C1C21' }} className="p-4 mb-10">

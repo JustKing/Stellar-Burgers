@@ -15,9 +15,9 @@ export default class BurgerIngredientsSection extends React.Component<Props> {
     return (
       <section id={this.props.id} className="mb-10">
         <p className="text text_type_main-medium mb-6">{this.props.title}</p>
-        {this.props.ingredientsByRow.map((row) => {
+        {this.props.ingredientsByRow.map((row, key) => {
           return (
-            <div className="row">
+            <div className="row" key={key}>
               {row.map((ingredient, bunIndex) => (
                 <BurgerIngredientsCard
                   value={ingredient}

@@ -1,6 +1,7 @@
 import React from 'react';
 
 import AppHeader from '../app-header/app-header';
+import BurgerConstructor from '../burger-constructor/burger-constructor';
 import BurgerIngredients from '../burger-ingredients/burger-ingredients';
 
 export default class App extends React.Component {
@@ -216,15 +217,24 @@ export default class App extends React.Component {
         image_large: 'https://code.s3.yandex.net/react/code/bun-01-large.png',
         __v: 0
       }
-    ]
+    ],
+    offset: 0
   };
+
+  changeOffset = (offset: number) => {
+    this.setState((prevState) => ({
+      ...prevState,
+      offset: offset
+    }))
+  }
 
   render() {
     return (
       <>
-        <AppHeader />
-        <main>
-          <BurgerIngredients ingredients={this.state.ingredients} />
+        <AppHeader changeOffset={this.changeOffset} />
+        <main className="flex container jc-center" style={{ height: `calc(100vh - ${this.state.offset}px)` }}>
+          <BurgerIngredients offset={this.state.offset} ingredients={this.state.ingredients} />
+          <BurgerConstructor offset={this.state.offset} ingredients={this.state.ingredients} />
         </main>
       </>
     );
