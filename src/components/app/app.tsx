@@ -225,14 +225,17 @@ export default class App extends React.Component {
     this.setState((prevState) => ({
       ...prevState,
       offset: offset
-    }))
-  }
+    }));
+  };
 
   render() {
     return (
       <>
         <AppHeader changeOffset={this.changeOffset} />
-        <main className="flex container jc-center" style={{ height: `calc(100vh - ${this.state.offset}px)` }}>
+        <main
+          className="flex container jc-center"
+          style={{ height: `calc(100vh - ${this.state.offset}px)`, margin: '0 auto' }}
+        >
           <BurgerIngredients offset={this.state.offset} ingredients={this.state.ingredients} />
           <BurgerConstructor offset={this.state.offset} ingredients={this.state.ingredients} />
         </main>

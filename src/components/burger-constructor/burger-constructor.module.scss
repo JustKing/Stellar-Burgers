@@ -1,6 +1,7 @@
 @import '../../styles/mixins/vertical-scrollbar';
 
-.ingredients {
+.structure {
+  display: flex;
   overflow-y: auto;
   @include scrollbar;
 }
