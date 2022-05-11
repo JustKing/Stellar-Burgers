@@ -1,3 +1,23 @@
 .flex {
   display: flex;
 }
+
+.wrap {
+  flex-wrap: wrap;
+}
+
+.jc-center {
+  justify-content: center;
+}
+
+.ai-center {
+  align-items: center;
+}
+
+.ta-center {
+  text-align: center;
+}
+
+.row {
+  display: inline-flex;
+}
