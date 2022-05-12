@@ -1,5 +1,3 @@
-import { ingredients } from '../interfaces/ingredients';
-
 const TABS = [
   {
     type: 'bun',
