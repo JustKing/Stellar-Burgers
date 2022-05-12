@@ -51,32 +51,13 @@ const BurgerConstructor = ({ ingredients, offset }: Props) => {
       {burgerStructure && (
         <>
           <div className="mb-10 flex" style={{ flexDirection: 'column', height: `calc(100% - ${offset}px - ${gap}` }}>
-            <BurgerConstructorElement
-              type="top"
-              isLocked={true}
-              name={burgerStructure.topBun.name}
-              price={burgerStructure.topBun.price}
-              image={burgerStructure.topBun.image}
-            />
+            <BurgerConstructorElement isLocked ingredient={burgerStructure.topBun} type="top" />
             <div style={{ flexDirection: 'column', gap: gap }} className={burgerConstructorStyles.structure}>
               {burgerStructure.main.map((ingredient, key) => (
-                <BurgerConstructorElement
-                  type={undefined}
-                  isLocked={false}
-                  name={ingredient.name}
-                  price={ingredient.price}
-                  image={ingredient.image}
-                  key={`ingredients-${key}`}
-                />
+                <BurgerConstructorElement isLocked={false} ingredient={ingredient} key={`ingredients-${key}`} />
               ))}
             </div>
-            <BurgerConstructorElement
-              type="bottom"
-              isLocked={true}
-              name={burgerStructure.bottomBun.name}
-              price={burgerStructure.bottomBun.price}
-              image={burgerStructure.bottomBun.image}
-            />
+            <BurgerConstructorElement isLocked ingredient={burgerStructure.bottomBun} type="bottom" />
           </div>
           <BurgerConstructorOrder total={totalPrice} />
         </>

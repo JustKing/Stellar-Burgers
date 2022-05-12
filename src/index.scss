@@ -1,27 +1,4 @@
-.flex {
-  display: flex;
-}
-
-.wrap {
-  flex-wrap: wrap;
-}
-
-.jc {
-  &-center {
-    justify-content: center;
-  }
-  &-end {
-    justify-content: end;
-  }
-}
-
-.ai-center {
-  align-items: center;
-}
-
-.ta-center {
-  text-align: center;
-}
+@import url(./styles/functional.scss);
 
 .row {
   display: inline-flex;
