@@ -1,6 +1,17 @@
 @import '../../styles/mixins/vertical-scrollbar';
 
-.ingredients {
-  overflow-y: auto;
-  @include scrollbar;
+.ingredientsWrapper {
+  width: 600px;
+  & .ingredients {
+    overflow-y: auto;
+    @include scrollbar;
+  }
+}
+
+@media (max-width: 1240px) {
+  .ingredientsWrapper {
+    width: 100%;
+    padding-left: 16px;
+    padding-right: 16px;
+  }
 }

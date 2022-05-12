@@ -1,7 +1,9 @@
-import React from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 import BurgerIngredientsSection from './burger-ingredients-section/burger-ingredients-section';
+
+import { TABS } from '../../constants';
 
 import burgerIngredientsStyles from './burger-ingredients.module.scss';
 import { ingredients } from '../../interfaces/ingredients';
@@ -10,98 +12,61 @@ type Props = {
   ingredients: ingredients.ingredient[];
   offset: number;
 };
-export default class BurgerIngredients extends React.Component<Props> {
-  state = {
-    activeTab: 'bun',
-    tabs: [
-      {
-        type: 'bun',
-        title: 'Булки'
-      },
-      {
-        type: 'sauce',
-        title: 'Соусы'
-      },
-      {
-        type: 'main',
-        title: 'Начинки'
-      }
-    ]
-  };
 
-  get sectionsWrapper(): HTMLElement | null {
-    return document.querySelector<HTMLElement>('#ingredients-sections');
-  }
+const BurgerIngredients = ({ ingredients, offset }: Props) => {
+  const [activeTab, setActiveTabs] = useState('bun');
 
-  get offsetTop(): number {
-    return document.querySelector<HTMLElement>('section#bun')?.offsetTop || 0;
-  }
+  const sectionsRef = useRef<HTMLDivElement>(null);
+  const topOffset = useMemo(() => offset * 2 + 28, [offset]);
+  const bottomOffset = 52;
 
-  componentDidMount() {
-    // #TODO
-    // const observer = new IntersectionObserver(
-    //   (entries) => {
-    //     entries.forEach((entry) => {
-    //       if (entry.isIntersecting) {
-    //         console.log(entry.target.id)
-    //         this.setState((prevState) => ({
-    //           ...prevState,
-    //           activeTab: entry.target.id
-    //         }));
-    //       }
-    //     });
-    //   },
-    //   { threshold: [0.5] }
-    // );
+  // #TODO
+  // useEffect(() => {
+  // const observer = new IntersectionObserver(
+  //   (entries) => {
+  //     entries.forEach((entry) => {
+  //       if (entry.isIntersecting) {
+  //         console.log(entry.target.id)
+  //         this.setState((prevState) => ({
+  //           ...prevState,
+  //           activeTab: entry.target.id
+  //         }));
+  //       }
+  //     });
+  //   },
+  //   { threshold: [0.5] }
+  // );
 
-    // const buns = document.querySelector<HTMLElement>('section#bun');
-    // const sauces = document.querySelector<HTMLElement>('section#sauce');
-    // const mains = document.querySelector<HTMLElement>('section#main');
-    // if (buns) {
-    //   observer.observe(buns);
-    // }
-    // if (sauces) {
-    //   observer.observe(sauces);
-    // }
-    // if (mains) {
-    //   observer.observe(mains);
-    // }
-  }
+  // const buns = document.querySelector<HTMLElement>('section#bun');
+  // const sauces = document.querySelector<HTMLElement>('section#sauce');
+  // const mains = document.querySelector<HTMLElement>('section#main');
+  // if (buns) {
+  //   observer.observe(buns);
+  // }
+  // if (sauces) {
+  //   observer.observe(sauces);
+  // }
+  // if (mains) {
+  //   observer.observe(mains);
+  // }
+  // }, [])
 
-  setCurrent = (tab: string) => {
-    if (tab !== this.state.activeTab) {
+  const setCurrent = (tab: string) => {
+    if (tab !== activeTab) {
       const ingredientsSection = document.querySelector<HTMLElement>(`section#${tab}`);
       if (ingredientsSection) {
         setTimeout(() => {
-          this.sectionsWrapper?.scrollTo({
+          sectionsRef.current?.scrollTo({
             behavior: ingredientsSection ? 'smooth' : 'auto',
-            top: ingredientsSection.offsetTop - this.offsetTop || 0
+            top: ingredientsSection.offsetTop - topOffset || 0
           });
         }, 100);
       }
-      this.setState((prevState) => ({
-        ...prevState,
-        activeTab: tab
-      }));
+      setActiveTabs(tab);
     }
   };
 
-  public get buns(): ingredients.ingredient[][] {
-    const buns = this.props.ingredients.filter((ingredient) => ingredient.type === 'bun');
-    return this.getIngredientsRows(buns);
-  }
-
-  public get sauces(): ingredients.ingredient[][] {
-    const sauces = this.props.ingredients.filter((ingredient) => ingredient.type === 'sauce');
-    return this.getIngredientsRows(sauces);
-  }
-
-  public get mains(): ingredients.ingredient[][] {
-    const mains = this.props.ingredients.filter((ingredient) => ingredient.type === 'main');
-    return this.getIngredientsRows(mains);
-  }
-
-  private getIngredientsRows(ingredients: ingredients.ingredient[]): ingredients.ingredient[][] {
+  const getIngredientsRows = (ingredients: ingredients.ingredient[]): ingredients.ingredient[][] => {
     let ingredientsByRow: ingredients.ingredient[][] = [];
     for (let i = 0; i < ingredients.length / 2; i++) {
       const row = [];
@@ -116,29 +81,44 @@ export default class BurgerIngredients extends React.Component<Props> {
       ingredientsByRow.push(row);
     }
     return ingredientsByRow;
-  }
+  };
 
-  render() {
-    return (
-      <div style={{ width: '600px' }} className="mr-5">
-        <p className="text text_type_main-large mb-5">Соберите бургер</p>
-        <div className="flex mb-10">
-          {this.state.tabs.map((tab, index) => (
-            <Tab value={tab.type} active={this.state.activeTab === tab.type} key={index} onClick={this.setCurrent}>
-              {tab.title}
-            </Tab>
-          ))}
-        </div>
-        <div
-          className={`${burgerIngredientsStyles.ingredients}`}
-          id="ingredients-sections"
-          style={{ height: `calc(100% - ${this.props.offset + 28}px)` }}
-        >
-          <BurgerIngredientsSection id="bun" title="Булочки" ingredientsByRow={this.buns} />
-          <BurgerIngredientsSection id="sauce" title="Соусы" ingredientsByRow={this.sauces} />
-          <BurgerIngredientsSection id="main" title="Начинки" ingredientsByRow={this.mains} />
-        </div>
+  const buns = useMemo(() => {
+    const buns = ingredients.filter((ingredient) => ingredient.type === 'bun');
+    return getIngredientsRows(buns);
+  }, [ingredients]);
+
+  const sauces = useMemo(() => {
+    const sauces = ingredients.filter((ingredient) => ingredient.type === 'sauce');
+    return getIngredientsRows(sauces);
+  }, [ingredients]);
+
+  const mains = useMemo(() => {
+    const mains = ingredients.filter((ingredient) => ingredient.type === 'main');
+    return getIngredientsRows(mains);
+  }, [ingredients]);
+
+  return (
+    <div className={`${burgerIngredientsStyles.ingredientsWrapper} mr-5`}>
+      <p className="text text_type_main-large mb-5">Соберите бургер</p>
+      <div className="flex mb-10">
+        {TABS.map((tab, index) => (
+          <Tab value={tab.type} active={activeTab === tab.type} key={index} onClick={setCurrent}>
+            {tab.title}
+          </Tab>
+        ))}
       </div>
-    );
-  }
-}
+      <div
+        className={`${burgerIngredientsStyles.ingredients}`}
+        style={{ height: `calc(100% - ${offset + 28 + bottomOffset}px)` }}
+        ref={sectionsRef}
+      >
+        <BurgerIngredientsSection id="bun" title="Булочки" ingredientsByRow={buns} />
+        <BurgerIngredientsSection id="sauce" title="Соусы" ingredientsByRow={sauces} />
+        <BurgerIngredientsSection id="main" title="Начинки" ingredientsByRow={mains} />
+      </div>
+    </div>
+  );
+};
+
+export default BurgerIngredients;

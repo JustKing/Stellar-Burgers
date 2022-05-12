@@ -6,8 +6,13 @@
   flex-wrap: wrap;
 }
 
-.jc-center {
-  justify-content: center;
+.jc {
+  &-center {
+    justify-content: center;
+  }
+  &-end {
+    justify-content: end;
+  }
 }
 
 .ai-center {
@@ -20,6 +25,7 @@
 
 .row {
   display: inline-flex;
+  width: 100%;
 }
 
 .container {
@@ -28,4 +34,8 @@
 
 .constructor-element {
   background: var(--background);
+}
+
+div[class^='tab'] {
+  flex: 1 1;
 }
