@@ -15,7 +15,7 @@ const BurgerConstructorElement = memo(({ name, price, image, isLocked, type }: P
     <div className={`${isLocked ? (type === 'bottom' ? 'mt-2' : 'mb-2') : ''} flex ai-center`}>
       <span className={`${isLocked ? 'mr-8' : 'mr-2'}`}>{!isLocked && <DragIcon type="primary" />}</span>
       <ConstructorElement type={type} text={name} price={price} thumbnail={image} isLocked={isLocked} />
-      <span className={`${isLocked ? 'mr-1' : ''}`}></span>
+      <span className={`${isLocked ? 'mr-4' : 'mr-2'}`}></span>
     </div>
   );
 });

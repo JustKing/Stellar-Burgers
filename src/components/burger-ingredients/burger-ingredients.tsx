@@ -18,7 +18,6 @@ const BurgerIngredients = ({ ingredients, offset }: Props) => {
 
   const sectionsRef = useRef<HTMLDivElement>(null);
   const topOffset = useMemo(() => offset * 2 + 28, [offset]);
-  const bottomOffset = 52;
 
   // #TODO
   // useEffect(() => {
@@ -110,7 +109,7 @@ const BurgerIngredients = ({ ingredients, offset }: Props) => {
       </div>
       <div
         className={`${burgerIngredientsStyles.ingredients}`}
-        style={{ height: `calc(100% - ${offset + 28 + bottomOffset}px)` }}
+        style={{ height: `calc(100% - ${offset + 28}px)` }}
         ref={sectionsRef}
       >
         <BurgerIngredientsSection id="bun" title="Булочки" ingredientsByRow={buns} />

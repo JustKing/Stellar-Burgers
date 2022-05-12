@@ -1,5 +1,7 @@
-import React from 'react';
-import { Button, DragIcon, ConstructorElement } from '@ya.praktikum/react-developer-burger-ui-components';
+import { useMemo } from 'react';
+
+import BurgerConstructorElement from './burger-constructor-element/burger-constructor-element';
+import BurgerConstructorOrder from './burger-constructor-order/burger-constructor-order';
 
 import burgerConstructorStyles from './burger-constructor.module.scss';
 
@@ -16,59 +18,71 @@ type Props = {
   offset: number;
 };
 
-export default class BurgerConstructor extends React.Component<Props> {
-  get burgerStructure(): burgerStructure {
-    const buns = this.props.ingredients.filter((ingredient) => ingredient.type === 'bun');
-    const mainIngredients = this.props.ingredients.filter((ingredient) => ingredient.type !== 'bun');
-    const mainStructure = [];
-    for (let i = 0; i < 10; i++) {
-      mainStructure.push(mainIngredients[Math.round(Math.random() * (mainIngredients.length - 1))]);
+const gap = '10px';
+
+const BurgerConstructor = ({ ingredients, offset }: Props) => {
+  const burgerStructure = useMemo((): burgerStructure | null => {
+    if (ingredients.length > 0) {
+      const buns = ingredients.filter((ingredient) => ingredient.type === 'bun');
+      const mainIngredients = ingredients.filter((ingredient) => ingredient.type !== 'bun');
+      const mainStructure = [];
+      for (let i = 0; i < 10; i++) {
+        mainStructure.push(mainIngredients[Math.round(Math.random() * (mainIngredients.length - 1))]);
+      }
+      return {
+        topBun: buns[Math.round(Math.random() * (buns.length - 1))],
+        main: mainStructure,
+        bottomBun: buns[Math.round(Math.random() * (buns.length - 1))]
+      };
     }
-    return {
-      topBun: buns[Math.round(Math.random() * (buns.length - 1))],
-      main: mainStructure,
-      bottomBun: buns[Math.round(Math.random() * (buns.length - 1))]
-    };
-  }
-  render() {
-    return (
-      <div style={{ flexDirection: 'column', gap: '10px', width: '600px' }} className="flex ml-5 mt-15 pr-4 pl-4">
-        <div className="flex ai-center">
-          <div className="mr-8"></div>
-          <ConstructorElement
-            type="top"
-            isLocked={true}
-            text={this.burgerStructure.topBun.name}
-            price={this.burgerStructure.topBun.price}
-            thumbnail={this.burgerStructure.topBun.image}
-          />
-        </div>
-        <div style={{ flexDirection: 'column', gap: '10px' }} className={burgerConstructorStyles.structure}>
-          {this.burgerStructure.main.map((ingredient, key) => (
-            <div className="flex ai-center">
-              <span className="mr-2">
-                <DragIcon type="primary" />
-              </span>
-              <ConstructorElement
-                text={ingredient.name}
-                price={ingredient.price}
-                thumbnail={ingredient.image}
-                key={`ingredients-${key}`}
-              />
+    return null;
+  }, [ingredients]);
+
+  const totalPrice = useMemo(() => {
+    if (burgerStructure) {
+      const mainPrice = burgerStructure.main.reduce((acc, ingredient) => acc + ingredient.price, 0);
+      return mainPrice + burgerStructure.topBun.price + burgerStructure.bottomBun.price;
+    }
+    return 0;
+  }, [burgerStructure]);
+
+  return (
+    <div style={{ flexDirection: 'column', width: '600px' }} className="flex ml-5 mt-15 pr-4 pl-4">
+      {burgerStructure && (
+        <>
+          <div className="mb-10 flex" style={{ flexDirection: 'column', height: `calc(100% - ${offset}px - ${gap}` }}>
+            <BurgerConstructorElement
+              type="top"
+              isLocked={true}
+              name={burgerStructure.topBun.name}
+              price={burgerStructure.topBun.price}
+              image={burgerStructure.topBun.image}
+            />
+            <div style={{ flexDirection: 'column', gap: gap }} className={burgerConstructorStyles.structure}>
+              {burgerStructure.main.map((ingredient, key) => (
+                <BurgerConstructorElement
+                  type={undefined}
+                  isLocked={false}
+                  name={ingredient.name}
+                  price={ingredient.price}
+                  image={ingredient.image}
+                  key={`ingredients-${key}`}
+                />
+              ))}
             </div>
-          ))}
-        </div>
-        <div className="flex ai-center">
-          <div className="mr-8"></div>
-          <ConstructorElement
-            type="bottom"
-            isLocked={true}
-            text={this.burgerStructure.bottomBun.name}
-            price={this.burgerStructure.bottomBun.price}
-            thumbnail={this.burgerStructure.bottomBun.image}
-          />
-        </div>
-      </div>
-    );
-  }
-}
+            <BurgerConstructorElement
+              type="bottom"
+              isLocked={true}
+              name={burgerStructure.bottomBun.name}
+              price={burgerStructure.bottomBun.price}
+              image={burgerStructure.bottomBun.image}
+            />
+          </div>
+          <BurgerConstructorOrder total={totalPrice} />
+        </>
+      )}
+    </div>
+  );
+};
+
+export default BurgerConstructor;
