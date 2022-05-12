@@ -9,13 +9,20 @@ import { ingredients } from '../../interfaces/ingredients';
 const App = () => {
   const [ingredients, setIngredients] = useState<ingredients.ingredient[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [hasError, setHasError] = useState(false);
 
   useEffect(() => {
     setIsLoading(true);
     fetch('https://norma.nomoreparties.space/api/ingredients', { method: 'GET' })
       .then((result) => result.json())
-      .then((result) => setIngredients(result.data))
-      .catch((e) => console.error(e))
+      .then((result: { success: boolean; data: ingredients.ingredient[] }) => {
+        if (result.success) {
+          setIngredients(result.data);
+        } else {
+          setHasError(true);
+        }
+      })
+      .catch(() => setHasError(true))
       .finally(() => setIsLoading(false));
   }, []);
 
@@ -25,8 +32,14 @@ const App = () => {
     setOffset(offset);
   }, []);
 
-  return isLoading ? (
-    <div className="loading" />
+  return isLoading || hasError ? (
+    isLoading ? (
+      <div className="loading" />
+    ) : (
+      <div className="error flex jc-center ai-center" style={{ height: '100vh' }}>
+        <p className="text text_type_main-medium">Ошибка :(</p>
+      </div>
+    )
   ) : (
     <>
       <AppHeader changeOffset={changeOffset} />
