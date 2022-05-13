@@ -38,7 +38,7 @@ const Modal = ({ children, header, onClose }: Props) => {
       <div className={`${useModalStyles.modal} pt-10 pb-15 pr-10 pl-10`}>
         <div className="flex jc-space-between ai-center">
           <p className="text text_type_main-large">{header || ''}</p>
-          <div style={{ cursor: 'pointer' }}>
+          <div className='pointer'>
             <CloseIcon type="primary" onClick={onClose} />
           </div>
         </div>

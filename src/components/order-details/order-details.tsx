@@ -8,16 +8,16 @@ import { CheckMarkIcon } from '@ya.praktikum/react-developer-burger-ui-component
 
 const OrderDetails = memo(() => {
   return (
-    <div className="flex ai-center mt-10 mb-15" style={{ flexDirection: 'column' }}>
+    <div className="flex flex-column ai-center mt-10 mb-15 mr-15 ml-15">
       <p className={`text text_type_digits-large mb-8 ${orderDetailsStyles['number']}`}>
         {Math.round(Math.random() * 100000 + 10000)}
       </p>
       <p className="text text_type_main-medium mb-15">{'Идентификатор заказа'.toLocaleLowerCase()}</p>
-      <div className={`${orderDetailsStyles['check-mark-overlay']} mb-15 flex ai-center jc-center`}>
-        <img src={markOverlay1} alt="mark-done" style={{ position: 'absolute', opacity: 0.7 }} />
-        <img src={markOverlay2} alt="mark-done" style={{ position: 'absolute', opacity: 0.3 }} />
-        <img src={markOverlay3} alt="mark-done" style={{ position: 'absolute', opacity: 0.3 }} />
-        <div className={orderDetailsStyles['check-mark-icon']}>
+      <div className={`${orderDetailsStyles['check-mark-overlay']} p-relative flex ai-center jc-center mb-15`}>
+        <img src={markOverlay1} alt="mark-done" className='p-fixed o-7' />
+        <img src={markOverlay2} alt="mark-done" className='p-fixed o-3' />
+        <img src={markOverlay3} alt="mark-done" className='p-fixed o-3' />
+        <div className={orderDetailsStyles['check-mark-overlay__icon']}>
           <CheckMarkIcon type="primary" />
         </div>
       </div>

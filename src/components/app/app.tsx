@@ -1,11 +1,12 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState, useMemo } from 'react';
 
 import AppHeader from '../app-header/app-header';
 import BurgerConstructor from '../burger-constructor/burger-constructor';
 import BurgerIngredients from '../burger-ingredients/burger-ingredients';
 
 import { ingredients } from '../../interfaces/ingredients';
-import { useMemo } from 'react';
+
+import appStyles from './app.module.scss';
 
 const App = () => {
   const [ingredients, setIngredients] = useState<ingredients.ingredient[]>([]);
@@ -63,14 +64,14 @@ const App = () => {
     isLoading ? (
       <div className="loading" />
     ) : (
-      <div className="error flex jc-center ai-center" style={{ height: '100vh' }}>
+      <div className={`${appStyles.error} flex jc-center ai-center`}>
         <p className="text text_type_main-medium">{errorText}</p>
       </div>
     )
   ) : (
     <>
       <AppHeader changeOffset={changeOffset} />
-      <main className="flex container jc-center" style={{ height: `calc(100vh - ${offset}px)`, margin: '0 auto' }}>
+      <main className="flex container jc-center" style={{ height: `calc(100vh - ${offset}px)` }}>
         <BurgerIngredients offset={offset} ingredients={ingredients} burger={burgerStructure} />
         <BurgerConstructor offset={offset} ingredients={ingredients} burger={burgerStructure} />
       </main>

@@ -22,7 +22,7 @@ const AppHeader = ({ changeOffset }: Props) => {
   }, [changeOffset]);
 
   return (
-    <header style={{ backgroundColor: '#1C1C21' }} className="p-4 mb-10" ref={headerRef}>
+    <header className={`${appHeaderStyles.header} p-4 mb-10`} ref={headerRef}>
       <nav className={appHeaderStyles.nav}>
         <ul className={`${appHeaderStyles['no-type']} flex`}>
           <li className="flex pl-5 pr-5 pt-4 pb-4 selected">

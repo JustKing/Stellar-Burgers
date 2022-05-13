@@ -1,5 +1,11 @@
 .flex {
   display: flex;
+  &-column {
+    flex-direction: column;
+  }
+  &-row {
+    flex-direction: row;
+  }
 }
 
 .wrap {
@@ -24,4 +30,23 @@
 
 .ta-center {
   text-align: center;
+}
+
+.p {
+  &-relative {
+    position: relative;
+  }
+  &-fixed {
+    position: fixed;
+  }
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+@for $i from 0 through 10 {
+  .o-#{$i} {
+    opacity: calc($i / 10);
+  }
 }

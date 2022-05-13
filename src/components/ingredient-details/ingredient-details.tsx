@@ -17,10 +17,9 @@ const IngredientDetails = memo(({ ingredient }: Props) => {
   };
 
   return (
-    <div className="flex ai-center" style={{ flexDirection: 'column' }}>
+    <div className="flex flex-column ai-center">
       <img
-        className="mb-4"
-        style={{ height: '240px', width: '480px' }}
+        className={`${ingredientDetailStyles.image} mb-4`}
         src={ingredient.image_large}
         alt={ingredient.name}
       />

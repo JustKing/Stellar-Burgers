@@ -29,7 +29,7 @@ const BurgerIngredientsCard = memo(({ value, isEven, count }: Props) => {
         className={`${burgerIngredientsCardStyles.card} mb-8 ${isEven ? 'pr-2 pl-3' : 'pr-3 pl-4'}`}
         onClick={onOpenModal}
       >
-        <div style={{ position: 'relative' }}>
+        <div className='p-relative'>
           {count && <Counter count={count} size="default" />}
           <img className="ml-4 mr-4 mb-1" src={value.image} alt={value.name} />
         </div>

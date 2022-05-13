@@ -4,6 +4,10 @@
   justify-content: center;
 }
 
+.header {
+  background-color: var(--background);
+}
+
 nav.nav {
   display: flex;
   flex-direction: row;

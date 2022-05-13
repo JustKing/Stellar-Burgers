@@ -5,12 +5,11 @@
 .check-mark-overlay {
   width: 120px;
   height: 120px;
-  position: relative;
-}
 
-.check-mark-icon {
-  & > svg {
-    height: 48px;
-    width: 48px;
+  & > &__icon {
+    & > svg {
+      height: 48px;
+      width: 48px;
+    }
   }
 }
