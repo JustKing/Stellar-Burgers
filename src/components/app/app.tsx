@@ -23,7 +23,7 @@ const App = () => {
         return Promise.reject(`Ошибка ${result.status}`);
       })
       .then((result: { success: boolean; data: ingredients.ingredient[] }) => {
-        if (!result.success) {
+        if (result.success) {
           setIngredients(result.data);
         } else {
           return Promise.reject('Неизвестная ошибка');

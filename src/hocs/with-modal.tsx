@@ -18,13 +18,11 @@ const withModal = (WrappedComponent: ComponentType<{ ingredient?: ingredients.in
 
     render() {
       return (
-        <div style={{ overflow: 'hidden' }}>
-          {this.props.openModal && (
-            <Modal header={this.props.header} onClose={this.props.onClose}>
-              {this.props.ingredient ? <WrappedComponent ingredient={this.props.ingredient} /> : <WrappedComponent />}
-            </Modal>
-          )}
-        </div>
+        this.props.openModal && (
+          <Modal header={this.props.header} onClose={this.props.onClose}>
+            {this.props.ingredient ? <WrappedComponent ingredient={this.props.ingredient} /> : <WrappedComponent />}
+          </Modal>
+        )
       );
     }
   };
