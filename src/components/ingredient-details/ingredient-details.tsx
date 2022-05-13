@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { ingredients } from '../../interfaces/ingredients';
 import ingredientDetailStyles from './ingredient-details.module.scss';
 
@@ -5,7 +6,7 @@ type Props = {
   ingredient: ingredients.ingredient;
 };
 
-const IngredientDetails = ({ ingredient }: Props) => {
+const IngredientDetails = memo(({ ingredient }: Props) => {
   const composition = (title: string, value: number) => {
     return (
       <div className={ingredientDetailStyles.composition}>
@@ -27,6 +28,6 @@ const IngredientDetails = ({ ingredient }: Props) => {
       </div>
     </div>
   );
-};
+});
 
 export default IngredientDetails;

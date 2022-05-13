@@ -57,7 +57,12 @@ const BurgerConstructor = ({ ingredients, offset }: Props) => {
                 <BurgerConstructorElement isLocked={false} ingredient={ingredient} key={`ingredients-${key}`} />
               ))}
             </div>
-            <BurgerConstructorElement isLocked ingredient={burgerStructure.bottomBun} type="bottom" />
+            <BurgerConstructorElement
+              isLocked
+              ingredient={burgerStructure.bottomBun}
+              type="bottom"
+              style={{ marginTop: '10px' }}
+            />
           </div>
           <BurgerConstructorOrder total={totalPrice} />
         </>

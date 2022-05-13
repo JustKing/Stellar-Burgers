@@ -1,4 +1,4 @@
-import { memo } from 'react';
+import { memo, CSSProperties } from 'react';
 
 import { DragIcon, ConstructorElement } from '@ya.praktikum/react-developer-burger-ui-components';
 
@@ -8,11 +8,12 @@ type Props = {
   ingredient: ingredients.ingredient;
   isLocked: boolean;
   type?: 'top' | 'bottom';
+  style?: CSSProperties;
 };
 
-const BurgerConstructorElement = memo(({ ingredient, isLocked, type }: Props) => {
+const BurgerConstructorElement = memo(({ ingredient, isLocked, type, style }: Props) => {
   return (
-    <div className={`${isLocked ? (ingredient.type === 'bottom' ? 'mt-2' : 'mb-2') : ''} flex ai-center`}>
+    <div className={`${isLocked ? (ingredient.type === 'bottom' ? 'mt-2' : 'mb-2') : ''} flex ai-center`} style={style}>
       <span className={`${isLocked ? 'mr-8' : 'mr-2'}`}>{!isLocked && <DragIcon type="primary" />}</span>
       <ConstructorElement
         type={type}

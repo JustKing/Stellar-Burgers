@@ -98,7 +98,7 @@ const BurgerIngredients = ({ ingredients, offset }: Props) => {
   }, [ingredients]);
 
   return (
-    <div className={`${burgerIngredientsStyles.ingredientsWrapper} mr-5`}>
+    <div className={`${burgerIngredientsStyles['ingredients-wrapper']} mr-5`}>
       <p className="text text_type_main-large mb-5">Соберите бургер</p>
       <div className="flex mb-10">
         {TABS.map((tab, index) => (
@@ -112,9 +112,11 @@ const BurgerIngredients = ({ ingredients, offset }: Props) => {
         style={{ height: `calc(100% - ${offset + 28}px)` }}
         ref={sectionsRef}
       >
-        <BurgerIngredientsSection id="bun" title="Булочки" ingredientsByRow={buns} />
-        <BurgerIngredientsSection id="sauce" title="Соусы" ingredientsByRow={sauces} />
-        <BurgerIngredientsSection id="main" title="Начинки" ingredientsByRow={mains} />
+        {buns && <BurgerIngredientsSection id="bun" title="Булочки" ingredientsByRow={buns} />}
+        {sauces && <BurgerIngredientsSection id="sauce" title="Соусы" ingredientsByRow={sauces} />}
+        {mains && (
+          <BurgerIngredientsSection id="main" title="Начинки" ingredientsByRow={mains} />
+        )}
       </div>
     </div>
   );

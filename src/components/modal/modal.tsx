@@ -1,4 +1,4 @@
-import { MouseEvent, MouseEventHandler, useCallback, useState } from 'react';
+import { MouseEventHandler } from 'react';
 import { createPortal } from 'react-dom';
 
 import ModalOverlay from '../modal-overlay/modal-overlay';
