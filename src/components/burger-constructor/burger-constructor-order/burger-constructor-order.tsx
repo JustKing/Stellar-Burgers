@@ -1,12 +1,12 @@
 import { Button, CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { useState } from 'react';
 
-import useModal from '../../../hocs/use-modal';
+import withModal from '../../../hocs/with-modal';
 import OrderDetails from '../../order-details/order-details';
 
 const BurgerConstructorOrder = ({ total }: { total: number }) => {
   const [openModal, setOpenModal] = useState(false);
-  const WithModal = useModal(OrderDetails);
+  const WithModal = withModal(OrderDetails);
 
   const onOpenModal = () => {
     setOpenModal(true);

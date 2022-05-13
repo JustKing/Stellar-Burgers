@@ -9,7 +9,7 @@ type Props = {
   ingredient?: ingredients.ingredient;
 };
 
-const useModal = (WrappedComponent: ComponentType<{ ingredient?: ingredients.ingredient }>) =>
+const withModal = (WrappedComponent: ComponentType<{ ingredient?: ingredients.ingredient }>) =>
   class extends Component<Props> {
     handleOpenModal = (e: SyntheticEvent<HTMLElement, MouseEvent>) => {
       e.preventDefault();
@@ -29,4 +29,4 @@ const useModal = (WrappedComponent: ComponentType<{ ingredient?: ingredients.ing
     }
   };
 
-export default useModal;
+export default withModal;

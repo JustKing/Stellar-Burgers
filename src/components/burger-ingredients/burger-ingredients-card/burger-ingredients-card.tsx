@@ -3,7 +3,7 @@ import { CurrencyIcon, Counter } from '@ya.praktikum/react-developer-burger-ui-c
 import IngredientDetails from '../../ingredient-details/ingredient-details';
 import burgerIngredientsCardStyles from './burger-ingredients-card.module.scss';
 import { ingredients } from '../../../interfaces/ingredients';
-import useModal from '../../../hocs/use-modal';
+import withModal from '../../../hocs/with-modal';
 
 type Props = {
   value: ingredients.ingredient;
@@ -13,7 +13,7 @@ type Props = {
 
 const BurgerIngredientsCard = memo(({ value, isEven, count }: Props) => {
   const [openModal, setOpenModal] = useState(false);
-  const WithModal = useModal(IngredientDetails as any);
+  const WithModal = withModal(IngredientDetails as any);
 
   const onOpenModal = () => {
     setOpenModal(true);
