@@ -19,7 +19,7 @@ div[class^='tab'] {
 }
 
 .loading {
-  position: absolute;
+  position: fixed;
   width: 100px;
   height: 100px;
   top: 50%;
@@ -31,7 +31,7 @@ div[class^='tab'] {
 
   &::before {
     content: '';
-    position: absolute;
+    position: fixed;
     width: 100%;
     height: 100%;
     top: -3px;

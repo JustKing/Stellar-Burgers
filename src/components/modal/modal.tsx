@@ -5,7 +5,7 @@ import ModalOverlay from '../modal-overlay/modal-overlay';
 
 import { CloseIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 
-import useModalStyles from './modal.module.scss';
+import withModalStyles from './modal.module.scss';
 
 type Props = {
   children: JSX.Element;
@@ -35,7 +35,7 @@ const Modal = ({ children, header, onClose }: Props) => {
 
   return createPortal(
     <>
-      <div className={`${useModalStyles.modal} pt-10 pb-15 pr-10 pl-10`}>
+      <div className={`${withModalStyles.modal} pt-10 pb-15 pr-10 pl-10`}>
         <div className="flex jc-space-between ai-center">
           <p className="text text_type_main-large">{header || ''}</p>
           <div className='pointer'>
