@@ -2,7 +2,8 @@
 
 ## Описание
 
-Проектная работа 15 когорты yandex practicum.
+Проектная работа 15 когорты yandex practicum.\
+Опубликованая бургерная [тык](https://jst-stellar-burger.netlify.app/)
 
 ### `yarn start`
 
