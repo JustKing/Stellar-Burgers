@@ -11,19 +11,28 @@ const App = () => {
   const [ingredients, setIngredients] = useState<ingredients.ingredient[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [hasError, setHasError] = useState(false);
+  const [errorText, setErrorText] = useState('');
 
   useEffect(() => {
     setIsLoading(true);
     fetch('https://norma.nomoreparties.space/api/ingredients', { method: 'GET' })
-      .then((result) => result.json())
+      .then((result) => {
+        if (result.ok) {
+          return result.json();
+        }
+        return Promise.reject(`Ошибка ${result.status}`);
+      })
       .then((result: { success: boolean; data: ingredients.ingredient[] }) => {
-        if (result.success) {
+        if (!result.success) {
           setIngredients(result.data);
         } else {
-          setHasError(true);
+          return Promise.reject('Неизвестная ошибка');
         }
       })
-      .catch(() => setHasError(true))
+      .catch((e) => {
+        setHasError(true);
+        setErrorText(e);
+      })
       .finally(() => setIsLoading(false));
   }, []);
 
@@ -55,7 +64,7 @@ const App = () => {
       <div className="loading" />
     ) : (
       <div className="error flex jc-center ai-center" style={{ height: '100vh' }}>
-        <p className="text text_type_main-medium">Ошибка :(</p>
+        <p className="text text_type_main-medium">{errorText}</p>
       </div>
     )
   ) : (
