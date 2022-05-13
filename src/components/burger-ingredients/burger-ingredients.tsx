@@ -18,7 +18,9 @@ const BurgerIngredients = ({ ingredients, offset, burger }: Props) => {
   const [activeTab, setActiveTabs] = useState('bun');
 
   const sectionsRef = useRef<HTMLDivElement>(null);
-  const topOffset = useMemo(() => offset * 2 + 28, [offset]);
+  const bunsRef = useRef<HTMLElement>(null);
+  const saucesRef = useRef<HTMLElement>(null);
+  const mainsRef = useRef<HTMLElement>(null);
 
   // #TODO - пока что неадекватит
   // useEffect(() => {
@@ -49,14 +51,16 @@ const BurgerIngredients = ({ ingredients, offset, burger }: Props) => {
 
   const setCurrent = (tab: string) => {
     if (tab !== activeTab) {
-      const ingredientsSection = document.querySelector<HTMLElement>(`section#${tab}`);
-      if (ingredientsSection) {
-        setTimeout(() => {
-          sectionsRef.current?.scrollTo({
-            behavior: ingredientsSection ? 'smooth' : 'auto',
-            top: ingredientsSection.offsetTop - topOffset || 0
-          });
-        }, 100);
+      switch (tab) {
+        case 'bun':
+          bunsRef.current?.scrollIntoView({ behavior: 'smooth' });
+          break;
+        case 'sauce':
+          saucesRef.current?.scrollIntoView({ behavior: 'smooth' });
+          break;
+        case 'main':
+          mainsRef.current?.scrollIntoView({ behavior: 'smooth' });
+          break;
       }
       setActiveTabs(tab);
     }
@@ -122,26 +126,26 @@ const BurgerIngredients = ({ ingredients, offset, burger }: Props) => {
       >
         {buns && (
           <BurgerIngredientsSection
-            id="bun"
             title="Булочки"
             ingredientsByRow={buns}
             ingredientsCounter={ingredientsCounter}
+            ref={bunsRef}
           />
         )}
         {sauces && (
           <BurgerIngredientsSection
-            id="sauce"
             title="Соусы"
             ingredientsByRow={sauces}
             ingredientsCounter={ingredientsCounter}
+            ref={saucesRef}
           />
         )}
         {mains && (
           <BurgerIngredientsSection
-            id="main"
             title="Начинки"
             ingredientsByRow={mains}
             ingredientsCounter={ingredientsCounter}
+            ref={mainsRef}
           />
         )}
       </div>
