@@ -8,8 +8,12 @@ const BurgerConstructorOrder = ({ total }: { total: number }) => {
   const [openModal, setOpenModal] = useState(false);
   const WithModal = useModal(OrderDetails);
 
-  const toogleOpen = () => {
-    setOpenModal(!openModal);
+  const onOpenModal = () => {
+    setOpenModal(true);
+  };
+
+  const onCloseModal = () => {
+    setOpenModal(false);
   };
 
   return (
@@ -19,11 +23,11 @@ const BurgerConstructorOrder = ({ total }: { total: number }) => {
           <p className="text text_type_digits-medium mr-1">{total}</p>
           <CurrencyIcon type="primary" />
         </div>
-        <Button type="primary" size="medium" onClick={toogleOpen}>
+        <Button type="primary" size="medium" onClick={onOpenModal}>
           Оформить заказ
         </Button>
       </div>
-      <WithModal openModal={openModal} callback={toogleOpen} />
+      <WithModal openModal={openModal} onClose={onCloseModal} />
     </>
   );
 };

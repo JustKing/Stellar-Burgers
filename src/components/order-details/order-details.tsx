@@ -8,7 +8,7 @@ import { CheckMarkIcon } from '@ya.praktikum/react-developer-burger-ui-component
 
 const OrderDetails = memo(() => {
   return (
-    <div className="flex ai-center mt-10 mb-30" style={{ flexDirection: 'column' }}>
+    <div className="flex ai-center mt-10 mb-15" style={{ flexDirection: 'column' }}>
       <p className={`text text_type_digits-large mb-8 ${orderDetailsStyles['number']}`}>
         {Math.round(Math.random() * 100000 + 10000)}
       </p>

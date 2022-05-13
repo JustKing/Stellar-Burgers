@@ -3,15 +3,12 @@ import { memo, MouseEventHandler } from 'react';
 import modalOverlayStyles from './modal-overlay.module.scss';
 
 type Props = {
-  handleClose: MouseEventHandler<HTMLDivElement>;
-  children: JSX.Element;
+  onClose: MouseEventHandler<HTMLDivElement>;
 };
 
-const ModalOverlay = memo(({ handleClose, children }: Props) => {
+const ModalOverlay = memo(({ onClose }: Props) => {
   return (
-    <div className={`${modalOverlayStyles.overlay} flex`} onClick={handleClose}>
-      {children}
-    </div>
+    <div className={`${modalOverlayStyles.overlay} flex`} onClick={onClose}></div>
   );
 });
 

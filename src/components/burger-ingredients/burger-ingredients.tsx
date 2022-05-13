@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 import BurgerIngredientsSection from './burger-ingredients-section/burger-ingredients-section';
@@ -20,36 +20,32 @@ const BurgerIngredients = ({ ingredients, offset, burger }: Props) => {
   const sectionsRef = useRef<HTMLDivElement>(null);
   const topOffset = useMemo(() => offset * 2 + 28, [offset]);
 
-  // #TODO
+  // #TODO - пока что неадекватит
   // useEffect(() => {
-  // const observer = new IntersectionObserver(
-  //   (entries) => {
-  //     entries.forEach((entry) => {
-  //       if (entry.isIntersecting) {
-  //         console.log(entry.target.id)
-  //         this.setState((prevState) => ({
-  //           ...prevState,
-  //           activeTab: entry.target.id
-  //         }));
-  //       }
-  //     });
-  //   },
-  //   { threshold: [0.5] }
-  // );
+  //   const observer = new IntersectionObserver(
+  //     (entries) => {
+  //       entries.forEach((entry) => {
+  //         if (entry.isIntersecting) {
+  //           setActiveTabs(entry.target.id);
+  //         }
+  //       });
+  //     },
+  //     { threshold: [0.5] }
+  //   );
 
-  // const buns = document.querySelector<HTMLElement>('section#bun');
-  // const sauces = document.querySelector<HTMLElement>('section#sauce');
-  // const mains = document.querySelector<HTMLElement>('section#main');
-  // if (buns) {
-  //   observer.observe(buns);
-  // }
-  // if (sauces) {
-  //   observer.observe(sauces);
-  // }
-  // if (mains) {
-  //   observer.observe(mains);
-  // }
-  // }, [])
+  //   const buns = document.querySelector<HTMLElement>('section#bun');
+  //   const sauces = document.querySelector<HTMLElement>('section#sauce');
+  //   const mains = document.querySelector<HTMLElement>('section#main');
+  //   if (buns) {
+  //     observer.observe(buns);
+  //   }
+  //   if (sauces) {
+  //     observer.observe(sauces);
+  //   }
+  //   if (mains) {
+  //     observer.observe(mains);
+  //   }
+  // }, []);
 
   const setCurrent = (tab: string) => {
     if (tab !== activeTab) {

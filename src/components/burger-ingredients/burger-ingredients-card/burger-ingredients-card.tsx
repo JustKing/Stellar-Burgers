@@ -1,12 +1,9 @@
-import { memo, SyntheticEvent, useCallback, useState } from 'react';
-
+import { memo, useState } from 'react';
 import { CurrencyIcon, Counter } from '@ya.praktikum/react-developer-burger-ui-components';
-
-import Modal from '../../modal/modal';
 import IngredientDetails from '../../ingredient-details/ingredient-details';
-
 import burgerIngredientsCardStyles from './burger-ingredients-card.module.scss';
 import { ingredients } from '../../../interfaces/ingredients';
+import useModal from '../../../hocs/use-modal';
 
 type Props = {
   value: ingredients.ingredient;
@@ -16,20 +13,21 @@ type Props = {
 
 const BurgerIngredientsCard = memo(({ value, isEven, count }: Props) => {
   const [openModal, setOpenModal] = useState(false);
+  const WithModal = useModal(IngredientDetails as any);
 
-  const handleOpenModal = useCallback(
-    (e: SyntheticEvent<HTMLElement, MouseEvent>) => {
-      e.preventDefault();
-      setOpenModal(!openModal);
-    },
-    [openModal]
-  );
+  const onOpenModal = () => {
+    setOpenModal(true);
+  };
+
+  const onCloseModal = () => {
+    setOpenModal(false);
+  };
 
   return (
     <>
       <div
         className={`${burgerIngredientsCardStyles.card} mb-8 ${isEven ? 'pr-2 pl-3' : 'pr-3 pl-4'}`}
-        onClick={handleOpenModal}
+        onClick={onOpenModal}
       >
         <div style={{ position: 'relative' }}>
           {count && <Counter count={count} size="default" />}
@@ -41,13 +39,7 @@ const BurgerIngredientsCard = memo(({ value, isEven, count }: Props) => {
         </div>
         <p className="text text_type_main-default flex jc-center ta-center pb-6">{value.name}</p>
       </div>
-      <div style={{ overflow: 'hidden' }}>
-        {openModal && (
-          <Modal header="Детали ингредиента" handleOpenModal={handleOpenModal}>
-            <IngredientDetails ingredient={value} />
-          </Modal>
-        )}
-      </div>
+      <WithModal openModal={openModal} onClose={onCloseModal} header="Детали ингредиента" ingredient={value} />
     </>
   );
 });

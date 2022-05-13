@@ -1,4 +1,4 @@
-import { MouseEventHandler, useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 
 import ModalOverlay from '../modal-overlay/modal-overlay';
@@ -10,27 +10,31 @@ import useModalStyles from './modal.module.scss';
 type Props = {
   children: JSX.Element;
   header?: string;
-  handleOpenModal: MouseEventHandler<HTMLElement>;
+  onClose: any;
 };
 
 const modalRoot = document.getElementById('modal-root') as HTMLElement;
 
-const Modal = ({ children, header, handleOpenModal }: Props) => {
-  const handleClose = useCallback(
-    (e: any) => {
-      handleOpenModal(e);
-    },
-    [handleOpenModal]
-  );
+const Modal = ({ children, header, onClose }: Props) => {
+  const modalRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (modalRef.current) {
+      const height = (modalRef.current.clientHeight || 0);
+      const width = (modalRef.current.clientWidth || 0);
+      modalRef.current.style.top = `calc((100% - ${height}px) / 2)`;
+      modalRef.current.style.left = `calc((100% - ${width}px) / 2)`;
+    }
+  }, [children]);
 
   const handleEscape = useCallback(
     (e: KeyboardEvent) => {
       if (e.code === 'Escape' || e.key === 'Escape') {
         e.preventDefault();
-        handleClose(e);
+        onClose(e);
       }
     },
-    [handleClose]
+    [onClose]
   );
 
   useEffect(() => {
@@ -41,17 +45,18 @@ const Modal = ({ children, header, handleOpenModal }: Props) => {
   }, [handleEscape]);
 
   return createPortal(
-    <ModalOverlay handleClose={handleOpenModal}>
-      <div className={`${useModalStyles.modal} pt-10 pb-15 pr-10 pl-10`}>
+    <>
+      <div className={`${useModalStyles.modal} pt-10 pb-15 pr-10 pl-10`} ref={modalRef}>
         <div className="flex jc-space-between ai-center">
-          {header && <p className="text text_type_main-large">{header}</p>}
+          <p className="text text_type_main-large">{header || ''}</p>
           <div style={{ cursor: 'pointer' }}>
-            <CloseIcon type="primary" onClick={() => handleClose} />
+            <CloseIcon type="primary" onClick={onClose} />
           </div>
         </div>
         {children}
       </div>
-    </ModalOverlay>,
+      <ModalOverlay onClose={onClose} />
+    </>,
     modalRoot
   );
 };
