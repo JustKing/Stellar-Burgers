@@ -11,9 +11,10 @@ import { ingredients } from '../../interfaces/ingredients';
 type Props = {
   ingredients: ingredients.ingredient[];
   offset: number;
+  burger: ingredients.burger | null;
 };
 
-const BurgerIngredients = ({ ingredients, offset }: Props) => {
+const BurgerIngredients = ({ ingredients, offset, burger }: Props) => {
   const [activeTab, setActiveTabs] = useState('bun');
 
   const sectionsRef = useRef<HTMLDivElement>(null);
@@ -97,6 +98,17 @@ const BurgerIngredients = ({ ingredients, offset }: Props) => {
     return getIngredientsRows(mains);
   }, [ingredients]);
 
+  const ingredientsCounter = useMemo(() => {
+    if (burger) {
+      const ids = [...burger.main, burger.topBun, burger.bottomBun];
+      return ids.reduce((acc: { [key: string]: number }, id) => {
+        acc[id] = (acc[id] || 0) + 1;
+        return acc;
+      }, {});
+    }
+    return {};
+  }, [burger]);
+
   return (
     <div className={`${burgerIngredientsStyles['ingredients-wrapper']} mr-5`}>
       <p className="text text_type_main-large mb-5">Соберите бургер</p>
@@ -112,10 +124,29 @@ const BurgerIngredients = ({ ingredients, offset }: Props) => {
         style={{ height: `calc(100% - ${offset + 28}px)` }}
         ref={sectionsRef}
       >
-        {buns && <BurgerIngredientsSection id="bun" title="Булочки" ingredientsByRow={buns} />}
-        {sauces && <BurgerIngredientsSection id="sauce" title="Соусы" ingredientsByRow={sauces} />}
+        {buns && (
+          <BurgerIngredientsSection
+            id="bun"
+            title="Булочки"
+            ingredientsByRow={buns}
+            ingredientsCounter={ingredientsCounter}
+          />
+        )}
+        {sauces && (
+          <BurgerIngredientsSection
+            id="sauce"
+            title="Соусы"
+            ingredientsByRow={sauces}
+            ingredientsCounter={ingredientsCounter}
+          />
+        )}
         {mains && (
-          <BurgerIngredientsSection id="main" title="Начинки" ingredientsByRow={mains} />
+          <BurgerIngredientsSection
+            id="main"
+            title="Начинки"
+            ingredientsByRow={mains}
+            ingredientsCounter={ingredientsCounter}
+          />
         )}
       </div>
     </div>

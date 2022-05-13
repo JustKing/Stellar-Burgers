@@ -8,9 +8,10 @@ type Props = {
   id: string;
   title: string;
   ingredientsByRow: ingredients.ingredient[][];
+  ingredientsCounter: { [key: string]: number };
 };
 
-const BurgerIngredientsSection = memo(({ id, title, ingredientsByRow }: Props) => {
+const BurgerIngredientsSection = memo(({ id, title, ingredientsByRow, ingredientsCounter }: Props) => {
   return (
     <section id={id} className="mb-10">
       <p className="text text_type_main-medium mb-6">{title}</p>
@@ -22,6 +23,7 @@ const BurgerIngredientsSection = memo(({ id, title, ingredientsByRow }: Props) =
                 value={ingredient}
                 isEven={bunIndex % 2 ? true : false}
                 key={`${ingredient.type}-${ingredient._id}`}
+                count={ingredientsCounter[ingredient._id]}
               />
             ))}
           </div>

@@ -13,4 +13,10 @@ export namespace ingredients {
     image_large: string;
     __v: number;
   }
+
+  export interface burger {
+    topBun: string;
+    main: string[];
+    bottomBun: string;
+  }
 }

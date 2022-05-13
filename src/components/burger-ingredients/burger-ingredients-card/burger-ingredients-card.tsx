@@ -1,6 +1,6 @@
 import { memo, SyntheticEvent, useCallback, useState } from 'react';
 
-import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
+import { CurrencyIcon, Counter } from '@ya.praktikum/react-developer-burger-ui-components';
 
 import Modal from '../../modal/modal';
 import IngredientDetails from '../../ingredient-details/ingredient-details';
@@ -11,9 +11,10 @@ import { ingredients } from '../../../interfaces/ingredients';
 type Props = {
   value: ingredients.ingredient;
   isEven: boolean;
+  count?: number;
 };
 
-const BurgerIngredientsCard = memo(({ value, isEven }: Props) => {
+const BurgerIngredientsCard = memo(({ value, isEven, count }: Props) => {
   const [openModal, setOpenModal] = useState(false);
 
   const handleOpenModal = useCallback(
@@ -30,7 +31,10 @@ const BurgerIngredientsCard = memo(({ value, isEven }: Props) => {
         className={`${burgerIngredientsCardStyles.card} mb-8 ${isEven ? 'pr-2 pl-3' : 'pr-3 pl-4'}`}
         onClick={handleOpenModal}
       >
-        <img className="ml-4 mr-4 mb-1" src={value.image} alt={value.name} />
+        <div style={{ position: 'relative' }}>
+          {count && <Counter count={count} size="default" />}
+          <img className="ml-4 mr-4 mb-1" src={value.image} alt={value.name} />
+        </div>
         <div className="flex jc-center ai-center mb-1">
           <p className="text text_type_digits-default pr-2">{value.price}</p>
           <CurrencyIcon type="primary" />
