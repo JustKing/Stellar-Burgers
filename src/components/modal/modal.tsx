@@ -1,4 +1,4 @@
-import { MouseEventHandler } from 'react';
+import { MouseEventHandler, SyntheticEvent, useCallback, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 
 import ModalOverlay from '../modal-overlay/modal-overlay';
@@ -16,9 +16,29 @@ type Props = {
 const modalRoot = document.getElementById('modal-root') as HTMLElement;
 
 const Modal = ({ children, header, handleOpenModal }: Props) => {
-  const handleClose = (e: any) => {
-    handleOpenModal(e);
-  };
+  const handleClose = useCallback(
+    (e: any) => {
+      handleOpenModal(e);
+    },
+    [handleOpenModal]
+  );
+
+  const handleEscape = useCallback(
+    (e: KeyboardEvent) => {
+      if (e.code === 'Escape' || e.key === 'Escape') {
+        e.preventDefault();
+        handleClose(e);
+      }
+    },
+    [handleClose]
+  );
+
+  useEffect(() => {
+    document.addEventListener('keydown', handleEscape);
+    return () => {
+      document.removeEventListener('keydown', handleEscape);
+    };
+  }, [handleEscape]);
 
   return createPortal(
     <ModalOverlay handleClose={handleOpenModal}>
