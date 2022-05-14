@@ -1,6 +1,12 @@
 {
   "name": "stellar-burger",
   "version": "0.1.0",
+  "description": "Проектная работа 15 когорты курса 'React-разработчик' (Яндекс.Практикум)",
+  "homepage": "https://github.com/JustKing/Stellar-Burgers#readme",
+  "bugs": {
+    "url": "https://github.com/JustKing/Stellar-Burgers/issues"
+  },
+  "author": "Nikiforov Dmitrii <d@jstking.ru>",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.4",
