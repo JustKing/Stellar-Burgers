@@ -1,0 +1,11 @@
+@import '../../styles/mixins/vertical-scrollbar';
+
+constructor {
+  width: 600px;
+}
+
+.structure {
+  overflow-y: auto;
+  gap: 10px;
+  @include scrollbar;
+}

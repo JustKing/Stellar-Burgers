@@ -1,0 +1,12 @@
+.composition {
+  padding-right: 20px;
+  text-align: center;
+  &:last-child {
+    padding-right: 0px;
+  }
+}
+
+.image {
+  height: 240px;
+  width: 480px;
+}
