@@ -5,17 +5,23 @@ import BurgerIngredientsSection from './burger-ingredients-section/burger-ingred
 
 import { TABS } from '../../constants';
 
-import burgerIngredientsStyles from './burger-ingredients.module.scss';
+import { useContext } from 'react';
+
+import { BurgerContext, IngredientsContext } from '../../services/burgerContext';
+
 import { ingredients } from '../../interfaces/ingredients';
 
+import burgerIngredientsStyles from './burger-ingredients.module.scss';
+
 type Props = {
-  ingredients: ingredients.ingredient[];
   offset: number;
-  burger: ingredients.burger | null;
 };
 
-const BurgerIngredients = ({ ingredients, offset, burger }: Props) => {
+const BurgerIngredients = ({ offset }: Props) => {
   const [activeTab, setActiveTabs] = useState('bun');
+
+  const { ingredients } = useContext(IngredientsContext);
+  const { burger } = useContext(BurgerContext);
 
   const sectionsRef = useRef<HTMLDivElement>(null);
   const bunsRef = useRef<HTMLElement>(null);
@@ -100,9 +106,11 @@ const BurgerIngredients = ({ ingredients, offset, burger }: Props) => {
 
   const ingredientsCounter = useMemo(() => {
     if (burger) {
-      const ids = [...burger.main, burger.topBun, burger.bottomBun];
-      return ids.reduce((acc: { [key: string]: number }, id) => {
-        acc[id] = (acc[id] || 0) + 1;
+      const ids = [...burger.main, burger.bun, burger.bun];
+      return ids.reduce((acc: { [key: string]: number }, ingredient) => {
+        if (ingredient) {
+          acc[ingredient._id] = (acc[ingredient._id] || 0) + 1;
+        }
         return acc;
       }, {});
     }

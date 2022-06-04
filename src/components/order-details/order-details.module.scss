@@ -7,9 +7,36 @@
   height: 120px;
 
   & > &__icon {
+    animation: successOrderIcon 1s 1;
     & > svg {
       height: 48px;
       width: 48px;
     }
+  }
+
+  & > .image {
+    animation: successOrder 1s 1;
+  }
+}
+
+@keyframes successOrder {
+  0% {
+    transform: rotate(-90deg) scale(0.2);
+  }
+  50% {
+    transform: rotate(0deg) scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes successOrderIcon {
+  0%,
+  99% {
+    visibility: hidden;
+  }
+  100% {
+    visibility: visible;
   }
 }

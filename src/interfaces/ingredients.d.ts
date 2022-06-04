@@ -1,8 +1,20 @@
+import { Dispatch } from 'react';
+
 export namespace ingredients {
+  export type type = 'sauce' | 'main' | 'bun';
+
+  export namespace context {
+    type actions = { type: 'set'; payload: ingredients.ingredient[] } | { type: 'reset' };
+    export interface context {
+      ingredients: ingredient[];
+      ingredientsDispatcher: Dispatch<actions>;
+    }
+  }
+
   export interface ingredient {
     _id: string;
     name: string;
-    type: string;
+    type: type;
     proteins: number;
     fat: number;
     carbohydrates: number;
@@ -12,11 +24,5 @@ export namespace ingredients {
     image_mobile: string;
     image_large: string;
     __v: number;
-  }
-
-  export interface burger {
-    topBun: string;
-    main: string[];
-    bottomBun: string;
   }
 }
