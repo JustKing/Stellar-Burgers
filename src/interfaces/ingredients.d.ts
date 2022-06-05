@@ -4,11 +4,21 @@ export namespace ingredients {
   export type type = 'sauce' | 'main' | 'bun';
 
   export namespace context {
-    type actions = { type: 'set'; payload: ingredients.ingredient[] } | { type: 'reset' };
+    type actions =
+      | { type: 'set-ingredients'; payload: ingredients.ingredient[] }
+      | { type: 'set-error'; payload: string }
+      | { type: 'reset' }
+      | { type: 'loading'; payload: boolean };
     export interface context {
-      ingredients: ingredient[];
+      ingredients: state;
       ingredientsDispatcher: Dispatch<actions>;
     }
+  }
+
+  export interface state {
+    ingredients: ingredient[];
+    loading: boolean;
+    error: string;
   }
 
   export interface ingredient {

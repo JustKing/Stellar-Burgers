@@ -13,4 +13,6 @@ const TABS = [
   }
 ];
 
-export { TABS };
+const BASE_URL = 'https://norma.nomoreparties.space/api';
+
+export { TABS, BASE_URL };

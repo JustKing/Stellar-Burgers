@@ -22,7 +22,7 @@ const BurgerConstructor = ({ offset }: Props) => {
 
   const findIngredient = useCallback(
     (id: string) => {
-      return ingredients.find((ingredient) => ingredient._id === id) as ingredients.ingredient;
+      return ingredients.ingredients.find((ingredient) => ingredient._id === id) as ingredients.ingredient;
     },
     [ingredients]
   );

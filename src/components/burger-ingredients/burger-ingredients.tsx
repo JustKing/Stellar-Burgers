@@ -90,17 +90,17 @@ const BurgerIngredients = ({ offset }: Props) => {
   };
 
   const buns = useMemo(() => {
-    const buns = ingredients.filter((ingredient) => ingredient.type === 'bun');
+    const buns = ingredients.ingredients.filter((ingredient) => ingredient.type === 'bun');
     return getIngredientsRows(buns);
   }, [ingredients]);
 
   const sauces = useMemo(() => {
-    const sauces = ingredients.filter((ingredient) => ingredient.type === 'sauce');
+    const sauces = ingredients.ingredients.filter((ingredient) => ingredient.type === 'sauce');
     return getIngredientsRows(sauces);
   }, [ingredients]);
 
   const mains = useMemo(() => {
-    const mains = ingredients.filter((ingredient) => ingredient.type === 'main');
+    const mains = ingredients.ingredients.filter((ingredient) => ingredient.type === 'main');
     return getIngredientsRows(mains);
   }, [ingredients]);
 

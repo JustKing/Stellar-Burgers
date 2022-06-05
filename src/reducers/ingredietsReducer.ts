@@ -1,11 +1,19 @@
 import { ingredients } from '../interfaces/ingredients';
 
-const initialState: ingredients.ingredient[] = [];
+const initialState: ingredients.state = {
+  ingredients: [],
+  loading: false,
+  error: ''
+};
 
-const reducer = (state: ingredients.ingredient[], action: ingredients.context.actions): ingredients.ingredient[] => {
+const reducer = (state: ingredients.state, action: ingredients.context.actions): ingredients.state => {
   switch (action.type) {
-    case 'set':
-      return action.payload;
+    case 'loading':
+      return { ...state, loading: action.payload };
+    case 'set-error':
+      return { ...state, error: action.payload };
+    case 'set-ingredients':
+      return { ...state, ingredients: action.payload, error: '' };
     case 'reset':
       return initialState;
     default:

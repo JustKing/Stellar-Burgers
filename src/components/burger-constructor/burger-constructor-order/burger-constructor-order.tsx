@@ -9,47 +9,21 @@ import {
   initialState as totalPriceInitialState,
   reducer as totalPriceReducer
 } from '../../../reducers/totalPriceReducer';
-import { initialState as orderInitialState, reducer as orderReducer } from '../../../reducers/orderReducer';
 
-import { response } from '../../../interfaces/response';
+import useCreateOrder from '../../../hooks/use-fetch';
 
 const BurgerConstructorOrder = () => {
   const [openModal, setOpenModal] = useState(false);
   const { burger } = useContext(BurgerContext);
+  const { order } = useCreateOrder();
   const [totalPrice, totalPriceDispatcher] = useReducer(totalPriceReducer, totalPriceInitialState, undefined);
-  const [order, orderDispatcher] = useReducer(orderReducer, orderInitialState, undefined);
 
   const WithModal = withModal(OrderDetails);
 
-  const createOrder = () => {
+  const handleCreateOrder = async () => {
     const ingredientIds = [burger.bun._id, ...burger.main.map((ingredient) => ingredient._id)];
-    orderDispatcher({ type: 'reset' });
-    fetch('https://norma.nomoreparties.space/api/orders', {
-      method: 'POST',
-      body: JSON.stringify({ ingredients: ingredientIds }),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
-      .then((result) => {
-        if (result.ok) {
-          return result.json();
-        }
-        return Promise.reject(`Ошибка ${result.status}`);
-      })
-      .then((result: response.order) => {
-        if (result.success) {
-          orderDispatcher({ type: 'set', payload: { name: result.name, number: result.order.number } });
-        } else {
-          return Promise.reject('Неизвестная ошибка');
-        }
-      })
-      .catch((e) => {
-        orderDispatcher({ type: 'set-error', payload: e });
-      })
-      .finally(() => {
-        onOpenModal();
-      });
+    await order.createOrder(ingredientIds);
+    onOpenModal();
   };
 
   const onOpenModal = () => {
@@ -71,11 +45,11 @@ const BurgerConstructorOrder = () => {
           <p className="text text_type_digits-medium mr-1">{totalPrice}</p>
           <CurrencyIcon type="primary" />
         </div>
-        <Button type="primary" size="medium" onClick={createOrder}>
+        <Button type="primary" size="medium" onClick={handleCreateOrder}>
           Оформить заказ
         </Button>
       </div>
-      <WithModal openModal={openModal} order={order} onClose={onCloseModal} />
+      <WithModal openModal={openModal} order={order.state} onClose={onCloseModal} />
     </>
   );
 };
