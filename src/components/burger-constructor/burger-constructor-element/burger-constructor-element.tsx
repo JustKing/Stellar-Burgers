@@ -7,11 +7,12 @@ import { ingredients } from '../../../interfaces/ingredients';
 type Props = {
   ingredient: ingredients.ingredient;
   isLocked: boolean;
+  handleClose: () => void;
   type?: 'top' | 'bottom';
   style?: CSSProperties;
 };
 
-const BurgerConstructorElement = memo(({ ingredient, isLocked, type, style }: Props) => {
+const BurgerConstructorElement = memo(({ ingredient, isLocked, type, style, handleClose }: Props) => {
   const getTitle = useMemo(() => {
     if (type === 'top') {
       return `${ingredient.name} (верх)`;
@@ -23,8 +24,15 @@ const BurgerConstructorElement = memo(({ ingredient, isLocked, type, style }: Pr
     return ingredient.name;
   }, [ingredient, type]);
 
+  const getBunMargin = () => {
+    if (isLocked) {
+      return type === 'bottom' ? 'mt-2' : 'mb-2';
+    }
+    return '';
+  };
+
   return (
-    <div className={`${isLocked ? (ingredient.type === 'bottom' ? 'mt-2' : 'mb-2') : ''} flex ai-center`} style={style}>
+    <div className={`${getBunMargin()} flex ai-center`} style={style}>
       <span className={`${isLocked ? 'mr-8' : 'mr-2'}`}>{!isLocked && <DragIcon type="primary" />}</span>
       <ConstructorElement
         type={type}
@@ -32,6 +40,7 @@ const BurgerConstructorElement = memo(({ ingredient, isLocked, type, style }: Pr
         price={ingredient.price}
         thumbnail={ingredient.image}
         isLocked={isLocked}
+        handleClose={handleClose}
       />
       <span className={`${isLocked ? 'mr-4' : 'mr-2'}`}></span>
     </div>

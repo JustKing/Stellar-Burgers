@@ -17,7 +17,7 @@ const BurgerIngredientsSection = memo(
         <p className="text text_type_main-medium mb-6">{title}</p>
         {ingredientsByRow.map((row, key) => {
           return (
-            <div className="row" key={key}>
+            <div className="row w-100" key={key}>
               {row.map((ingredient, bunIndex) => (
                 <BurgerIngredientsCard
                   value={ingredient}

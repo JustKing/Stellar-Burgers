@@ -1,7 +1,11 @@
-@import url(./styles/functional.scss);
+@import url(./assets/styles/functional.scss);
 
 .row {
   display: inline-flex;
+  width: 100%;
+}
+
+.w-100 {
   width: 100%;
 }
 

@@ -1,54 +1,87 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback, useContext } from 'react';
+
+import { BurgerContext, IngredientsContext } from '../../services/burgerContext';
 
 import BurgerConstructorElement from './burger-constructor-element/burger-constructor-element';
+import BurgerConstructorPlug from './burger-constructor-plug/burger-constructor-plug';
 import BurgerConstructorOrder from './burger-constructor-order/burger-constructor-order';
-
-import burgerConstructorStyles from './burger-constructor.module.scss';
 
 import { ingredients } from '../../interfaces/ingredients';
 
+import burgerConstructorStyles from './burger-constructor.module.scss';
+
 type Props = {
-  ingredients: ingredients.ingredient[];
-  burger: ingredients.burger | null;
   offset: number;
 };
 
 const gap = '10px';
 
-const BurgerConstructor = ({ ingredients, burger, offset }: Props) => {
+const BurgerConstructor = ({ offset }: Props) => {
+  const { ingredients } = useContext(IngredientsContext);
+  const { burger, burgerDispatcher } = useContext(BurgerContext);
+
   const findIngredient = useCallback(
     (id: string) => {
-      return ingredients.find((ingredient) => ingredient._id === id) as ingredients.ingredient;
+      return ingredients.ingredients.find((ingredient) => ingredient._id === id) as ingredients.ingredient;
     },
     [ingredients]
   );
 
-  const totalPrice = useMemo(() => {
-    if (burger) {
-      const mainPrice = burger.main.reduce((acc, ingredientId) => acc + findIngredient(ingredientId).price, 0);
-      return mainPrice + findIngredient(burger.topBun).price + findIngredient(burger.bottomBun).price;
-    }
-    return 0;
-  }, [burger, findIngredient]);
+  const removeBun = useCallback(() => {
+    burgerDispatcher({ type: 'remove-bun' });
+  }, [burgerDispatcher]);
+
+  const removeMain = useCallback(
+    (id: number) => {
+      burgerDispatcher({ type: 'remove-main', payload: id });
+    },
+    [burgerDispatcher]
+  );
 
   return (
     <div className={`${burgerConstructorStyles.constructor} flex flex-column ml-5 mt-15 pr-4 pl-4`}>
       {burger && (
         <>
           <div className="mb-10 flex flex-column" style={{ height: `calc(100% - ${offset}px - ${gap}` }}>
-            <BurgerConstructorElement isLocked ingredient={findIngredient(burger.topBun)} type="top" />
-            <div className={`${burgerConstructorStyles.structure} flex flex-column mb-2`}>
-              {burger.main.map((ingredientId, key) => (
-                <BurgerConstructorElement
-                  isLocked={false}
-                  ingredient={findIngredient(ingredientId)}
-                  key={`ingredients-${key}`}
-                />
-              ))}
+            {findIngredient(burger.bun._id) ? (
+              <BurgerConstructorElement
+                isLocked
+                ingredient={findIngredient(burger.bun._id)}
+                type="top"
+                handleClose={removeBun}
+              />
+            ) : (
+              <BurgerConstructorPlug type="top" isLocked />
+            )}
+            <div className={`${burgerConstructorStyles.structure} flex flex-column`}>
+              {burger.main.length > 0 ? (
+                burger.main.map(
+                  (ingredient, key) =>
+                    findIngredient(ingredient._id) && (
+                      <BurgerConstructorElement
+                        isLocked={false}
+                        ingredient={findIngredient(ingredient._id)}
+                        key={`ingredients-${key}`}
+                        handleClose={() => removeMain(key)}
+                      />
+                    )
+                )
+              ) : (
+                <BurgerConstructorPlug type="main" isLocked={false} />
+              )}
             </div>
-            <BurgerConstructorElement isLocked ingredient={findIngredient(burger.bottomBun)} type="bottom" />
+            {findIngredient(burger.bun._id) ? (
+              <BurgerConstructorElement
+                isLocked
+                ingredient={findIngredient(burger.bun._id)}
+                type="bottom"
+                handleClose={removeBun}
+              />
+            ) : (
+              <BurgerConstructorPlug type="bottom" isLocked />
+            )}
           </div>
-          <BurgerConstructorOrder total={totalPrice} />
+          <BurgerConstructorOrder />
         </>
       )}
     </div>
