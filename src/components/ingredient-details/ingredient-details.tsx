@@ -1,12 +1,10 @@
 import { memo } from 'react';
-import { ingredients } from '../../interfaces/ingredients';
+import { useAppSelector } from '../../hooks/use-store';
 import ingredientDetailStyles from './ingredient-details.module.scss';
 
-type Props = {
-  ingredient: ingredients.ingredient;
-};
+const IngredientDetails = memo(() => {
+  const ingredientDetail = useAppSelector((state) => state.ingredientDetail.detail);
 
-const IngredientDetails = memo(({ ingredient }: Props) => {
   const composition = (title: string, value: number) => {
     return (
       <div className={ingredientDetailStyles.composition}>
@@ -18,17 +16,13 @@ const IngredientDetails = memo(({ ingredient }: Props) => {
 
   return (
     <div className="flex flex-column ai-center">
-      <img
-        className={`${ingredientDetailStyles.image} mb-4`}
-        src={ingredient.image_large}
-        alt={ingredient.name}
-      />
-      <p className="text text_type_main-medium mb-8">{ingredient.name}</p>
+      <img className={`${ingredientDetailStyles.image} mb-4`} src={ingredientDetail.image_large} alt={ingredientDetail.name} />
+      <p className="text text_type_main-medium mb-8">{ingredientDetail.name}</p>
       <div className="flex">
-        {composition('Калории, ккал', ingredient.calories)}
-        {composition('Белки, г', ingredient.proteins)}
-        {composition('Жиры, г', ingredient.fat)}
-        {composition('Углеводы, г', ingredient.carbohydrates)}
+        {composition('Калории, ккал', ingredientDetail.calories)}
+        {composition('Белки, г', ingredientDetail.proteins)}
+        {composition('Жиры, г', ingredientDetail.fat)}
+        {composition('Углеводы, г', ingredientDetail.carbohydrates)}
       </div>
     </div>
   );

@@ -1,9 +1,14 @@
 import { memo, useState } from 'react';
 import { CurrencyIcon, Counter } from '@ya.praktikum/react-developer-burger-ui-components';
+
 import IngredientDetails from '../../ingredient-details/ingredient-details';
-import burgerIngredientsCardStyles from './burger-ingredients-card.module.scss';
-import { ingredients } from '../../../interfaces/ingredients';
 import withModal from '../../../hocs/with-modal';
+import { useAppDispatch } from '../../../hooks/use-store';
+import { setIngredientDetail, reset } from '../../../store/reducers/ingredientDetail';
+
+import { ingredients } from '../../../interfaces/ingredients';
+
+import burgerIngredientsCardStyles from './burger-ingredients-card.module.scss';
 
 type Props = {
   value: ingredients.ingredient;
@@ -13,13 +18,16 @@ type Props = {
 
 const BurgerIngredientsCard = memo(({ value, isEven, count }: Props) => {
   const [openModal, setOpenModal] = useState(false);
-  const WithModal = withModal(IngredientDetails as any);
+  const dispatch = useAppDispatch();
+  const WithModal = withModal(IngredientDetails);
 
   const onOpenModal = () => {
+    dispatch(setIngredientDetail(value));
     setOpenModal(true);
   };
 
   const onCloseModal = () => {
+    dispatch(reset());
     setOpenModal(false);
   };
 
@@ -29,7 +37,7 @@ const BurgerIngredientsCard = memo(({ value, isEven, count }: Props) => {
         className={`${burgerIngredientsCardStyles.card} mb-8 ${isEven ? 'pr-2 pl-3' : 'pr-3 pl-4'}`}
         onClick={onOpenModal}
       >
-        <div className='p-relative'>
+        <div className="p-relative">
           {count && <Counter count={count} size="default" />}
           <img className="ml-4 mr-4 mb-1" src={value.image} alt={value.name} />
         </div>
@@ -39,7 +47,7 @@ const BurgerIngredientsCard = memo(({ value, isEven, count }: Props) => {
         </div>
         <p className="text text_type_main-default flex jc-center ta-center pb-6">{value.name}</p>
       </div>
-      <WithModal openModal={openModal} onClose={onCloseModal} header="Детали ингредиента" ingredient={value} />
+      <WithModal openModal={openModal} onClose={onCloseModal} header="Детали ингредиента" />
     </>
   );
 });
