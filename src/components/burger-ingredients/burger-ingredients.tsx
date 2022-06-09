@@ -4,14 +4,12 @@ import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 import BurgerIngredientsSection from './burger-ingredients-section/burger-ingredients-section';
 
 import { TABS } from '../../constants';
-
-import { useContext } from 'react';
-
-import { BurgerContext, IngredientsContext } from '../../services/burgerContext';
+import { ingredientsApi } from '../../store/services/ingredients';
 
 import { ingredients } from '../../interfaces/ingredients';
 
 import burgerIngredientsStyles from './burger-ingredients.module.scss';
+import { useAppSelector } from '../../hooks/use-store';
 
 type Props = {
   offset: number;
@@ -19,9 +17,8 @@ type Props = {
 
 const BurgerIngredients = ({ offset }: Props) => {
   const [activeTab, setActiveTabs] = useState('bun');
-
-  const { ingredients } = useContext(IngredientsContext);
-  const { burger } = useContext(BurgerContext);
+  const { currentData = [] } = ingredientsApi.useFetchAllIngredientsQuery([]);
+  const burger = useAppSelector(state => state.burger)
 
   const sectionsRef = useRef<HTMLDivElement>(null);
   const bunsRef = useRef<HTMLElement>(null);
@@ -90,19 +87,19 @@ const BurgerIngredients = ({ offset }: Props) => {
   };
 
   const buns = useMemo(() => {
-    const buns = ingredients.ingredients.filter((ingredient) => ingredient.type === 'bun');
+    const buns = currentData.filter((ingredient) => ingredient.type === 'bun');
     return getIngredientsRows(buns);
-  }, [ingredients]);
+  }, [currentData]);
 
   const sauces = useMemo(() => {
-    const sauces = ingredients.ingredients.filter((ingredient) => ingredient.type === 'sauce');
+    const sauces = currentData?.filter((ingredient) => ingredient.type === 'sauce');
     return getIngredientsRows(sauces);
-  }, [ingredients]);
+  }, [currentData]);
 
   const mains = useMemo(() => {
-    const mains = ingredients.ingredients.filter((ingredient) => ingredient.type === 'main');
+    const mains = currentData.filter((ingredient) => ingredient.type === 'main');
     return getIngredientsRows(mains);
-  }, [ingredients]);
+  }, [currentData]);
 
   const ingredientsCounter = useMemo(() => {
     if (burger) {

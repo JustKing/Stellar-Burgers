@@ -1,21 +1,22 @@
 import { Button, CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
-import { useContext, useEffect, useReducer, useState } from 'react';
-import { BurgerContext } from '../../../services/burgerContext';
+import { useEffect, useReducer, useState } from 'react';
+
+import OrderDetails from '../../order-details/order-details';
 
 import withModal from '../../../hocs/with-modal';
-import OrderDetails from '../../order-details/order-details';
+import { useAppSelector } from '../../../hooks/use-store';
 
 import {
   initialState as totalPriceInitialState,
   reducer as totalPriceReducer
 } from '../../../reducers/totalPriceReducer';
 
-import useCreateOrder from '../../../hooks/use-fetch';
+import useFetch from '../../../hooks/use-fetch';
 
 const BurgerConstructorOrder = () => {
   const [openModal, setOpenModal] = useState(false);
-  const { burger } = useContext(BurgerContext);
-  const { order } = useCreateOrder();
+  const burger = useAppSelector(state => state.burger)
+  const { order } = useFetch();
   const [totalPrice, totalPriceDispatcher] = useReducer(totalPriceReducer, totalPriceInitialState, undefined);
 
   const WithModal = withModal(OrderDetails);

@@ -1,13 +1,14 @@
-import { useCallback, useContext } from 'react';
-
-import { BurgerContext, IngredientsContext } from '../../services/burgerContext';
+import { useCallback } from 'react';
 
 import BurgerConstructorElement from './burger-constructor-element/burger-constructor-element';
 import BurgerConstructorPlug from './burger-constructor-plug/burger-constructor-plug';
 import BurgerConstructorOrder from './burger-constructor-order/burger-constructor-order';
 
-import { ingredients } from '../../interfaces/ingredients';
+import { useAppDispatch, useAppSelector } from '../../hooks/use-store';
+import { ingredientsApi } from '../../store/services/ingredients';
+import { removeBun, removeMain } from '../../store/reducers/burgerConstructor';
 
+import { ingredients } from '../../interfaces/ingredients';
 import burgerConstructorStyles from './burger-constructor.module.scss';
 
 type Props = {
@@ -17,25 +18,26 @@ type Props = {
 const gap = '10px';
 
 const BurgerConstructor = ({ offset }: Props) => {
-  const { ingredients } = useContext(IngredientsContext);
-  const { burger, burgerDispatcher } = useContext(BurgerContext);
+  const { currentData = [] } = ingredientsApi.useFetchAllIngredientsQuery([]);
+  const burger = useAppSelector((state) => state.burger);
+  const dispatch = useAppDispatch();
 
   const findIngredient = useCallback(
     (id: string) => {
-      return ingredients.ingredients.find((ingredient) => ingredient._id === id) as ingredients.ingredient;
+      return currentData?.find((ingredient) => ingredient._id === id) as ingredients.ingredient;
     },
-    [ingredients]
+    [currentData]
   );
 
-  const removeBun = useCallback(() => {
-    burgerDispatcher({ type: 'remove-bun' });
-  }, [burgerDispatcher]);
+  const handleRemoveBun = useCallback(() => {
+    dispatch(removeBun());
+  }, [dispatch]);
 
-  const removeMain = useCallback(
+  const handleRemoveMain = useCallback(
     (id: number) => {
-      burgerDispatcher({ type: 'remove-main', payload: id });
+      dispatch(removeMain(id));
     },
-    [burgerDispatcher]
+    [dispatch]
   );
 
   return (
@@ -48,7 +50,7 @@ const BurgerConstructor = ({ offset }: Props) => {
                 isLocked
                 ingredient={findIngredient(burger.bun._id)}
                 type="top"
-                handleClose={removeBun}
+                handleClose={handleRemoveBun}
               />
             ) : (
               <BurgerConstructorPlug type="top" isLocked />
@@ -62,7 +64,7 @@ const BurgerConstructor = ({ offset }: Props) => {
                         isLocked={false}
                         ingredient={findIngredient(ingredient._id)}
                         key={`ingredients-${key}`}
-                        handleClose={() => removeMain(key)}
+                        handleClose={() => handleRemoveMain(key)}
                       />
                     )
                 )

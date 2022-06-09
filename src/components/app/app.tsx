@@ -1,53 +1,73 @@
 import { useCallback, useEffect, useState } from 'react';
 
-import { BurgerContext, IngredientsContext } from '../../services/burgerContext';
-
 import AppHeader from '../app-header/app-header';
 import BurgerConstructor from '../burger-constructor/burger-constructor';
 import BurgerIngredients from '../burger-ingredients/burger-ingredients';
 
+import { useAppDispatch } from '../../hooks/use-store';
+import { useFetchAllIngredientsQuery } from '../../store/services/ingredients';
+import { setBun, setMain } from '../../store/reducers/burgerConstructor';
+
 import appStyles from './app.module.scss';
-import useCreateOrder from '../../hooks/use-fetch';
 
 const App = () => {
   const [offset, setOffset] = useState(0);
-  const { ingredients, burger } = useCreateOrder();
+  const { data = [], error, isLoading, isSuccess, isError } = useFetchAllIngredientsQuery([]);
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
-    ingredients.getIngredients();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    if (data.length > 0) {
+      const buns = data.filter((ingredient) => ingredient.type === 'bun');
+      const mainIngredients = data.filter((ingredient) => ingredient.type !== 'bun');
+      for (let i = 0; i < 10; i++) {
+        const ingredient = mainIngredients[Math.round(Math.random() * (mainIngredients.length - 1))];
+        dispatch(setMain(ingredient));
+      }
+      const bun = data[Math.round(Math.random() * (buns.length - 1))];
+      dispatch(setBun(bun));
+    }
+  }, [data, dispatch]);
 
   const changeOffset = useCallback((offset: number) => {
     setOffset(offset);
   }, []);
 
-  return ingredients.state.loading || ingredients.state.error ? (
-    ingredients.state.loading ? (
-      <div className="loading" />
-    ) : (
+  const errorMessage = (message: string) => {
+    return (
       <div className={`${appStyles.error} flex jc-center ai-center`}>
-        <p className="text text_type_main-medium">{ingredients.state.error}</p>
+        <p className="text text_type_main-medium">{message}</p>
       </div>
-    )
-  ) : (
-    <>
-      <AppHeader changeOffset={changeOffset} />
-      <main className="flex container jc-center" style={{ height: `calc(100vh - ${offset}px)` }}>
-        <IngredientsContext.Provider
-          value={{
-            ingredients: ingredients.state,
-            ingredientsDispatcher: ingredients.ingredientsDispatcher
-          }}
-        >
-          <BurgerContext.Provider value={{ burger: burger.state, burgerDispatcher: burger.burgerDispatcher }}>
-            <BurgerIngredients offset={offset} />
-            <BurgerConstructor offset={offset} />
-          </BurgerContext.Provider>
-        </IngredientsContext.Provider>
-      </main>
-    </>
-  );
+    );
+  };
+
+  if (isLoading) {
+    return <div className="loading" />;
+  }
+
+  if (isError) {
+    if (error) {
+      if ('status' in error) {
+        const errMsg = 'error' in error ? error.error : JSON.stringify(error.data);
+        return errorMessage(errMsg);
+      } else {
+        return errorMessage(`Ошибка ${error.message}`);
+      }
+    }
+  }
+
+  if (isSuccess && data.length > 0) {
+    return (
+      <>
+        <AppHeader changeOffset={changeOffset} />
+        <main className="flex container jc-center" style={{ height: `calc(100vh - ${offset}px)` }}>
+          <BurgerIngredients offset={offset} />
+          <BurgerConstructor offset={offset} />
+        </main>
+      </>
+    );
+  }
+
+  return errorMessage('Неопределенная ошибка');
 };
 
 export default App;
