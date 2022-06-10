@@ -1,7 +1,6 @@
-import { memo, useEffect } from 'react';
+import { memo } from 'react';
 import { CheckMarkIcon, CloseIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 
-import { useCreateOrderMutation } from '../../store/services/orderDetail';
 import markOverlay1 from '../../assets/images/markOverlay1.svg';
 import markOverlay2 from '../../assets/images/markOverlay2.svg';
 import markOverlay3 from '../../assets/images/markOverlay3.svg';

@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback } from 'react';
 
 import BurgerConstructorElement from './burger-constructor-element/burger-constructor-element';
 import BurgerConstructorPlug from './burger-constructor-plug/burger-constructor-plug';
