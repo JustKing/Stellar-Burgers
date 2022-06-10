@@ -1,29 +1,29 @@
 import { Button, CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
-import { useEffect, useReducer, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import OrderDetails from '../../order-details/order-details';
 
 import withModal from '../../../hocs/with-modal';
-import { useAppSelector } from '../../../hooks/use-store';
+import { useAppDispatch, useAppSelector } from '../../../hooks/use-store';
 
-import {
-  initialState as totalPriceInitialState,
-  reducer as totalPriceReducer
-} from '../../../reducers/totalPriceReducer';
-
-import useFetch from '../../../hooks/use-fetch';
+import { calculateTotalPrice, resetTotalPrice } from '../../../store/reducers/totalPriceSlice';
+import { useCreateOrderMutation } from '../../../store/services/orderDetail';
 
 const BurgerConstructorOrder = () => {
   const [openModal, setOpenModal] = useState(false);
-  const burger = useAppSelector(state => state.burger)
-  const { order } = useFetch();
-  const [totalPrice, totalPriceDispatcher] = useReducer(totalPriceReducer, totalPriceInitialState, undefined);
+  const { burger, totalPrice } = useAppSelector((state) => ({
+    burger: state.burger,
+    totalPrice: state.totalPrice.totalPrice
+  }));
+  const [createOrder, { isLoading, isError, data }] = useCreateOrderMutation();
+  const dispatch = useAppDispatch();
 
   const WithModal = withModal(OrderDetails);
 
   const handleCreateOrder = async () => {
     const ingredientIds = [burger.bun._id, ...burger.main.map((ingredient) => ingredient._id)];
-    await order.createOrder(ingredientIds);
+    await createOrder(ingredientIds);
+    console.log(isError, data);
     onOpenModal();
   };
 
@@ -36,8 +36,15 @@ const BurgerConstructorOrder = () => {
   };
 
   useEffect(() => {
-    totalPriceDispatcher({ type: 'get', payload: burger });
-  }, [burger]);
+    dispatch(calculateTotalPrice(burger));
+    return () => {
+      dispatch(resetTotalPrice());
+    };
+  }, [burger, dispatch]);
+
+  if (isLoading) {
+    return <div className="loading" />;
+  }
 
   return (
     <>
@@ -50,7 +57,7 @@ const BurgerConstructorOrder = () => {
           Оформить заказ
         </Button>
       </div>
-      <WithModal openModal={openModal} order={order.state} onClose={onCloseModal} />
+      <WithModal openModal={openModal} onClose={onCloseModal} />
     </>
   );
 };

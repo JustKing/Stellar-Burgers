@@ -11,7 +11,7 @@ export const ingredientsApi = createApi({
   endpoints: (build) => ({
     fetchAllIngredients: build.query<ingredients.ingredient[], any>({
       query: () => `ingredients`,
-      transformResponse: (response: response.ingredient) => response.data
+      transformResponse: (response: response.response<ingredients.ingredient[]>) => response.data
     })
   })
 });

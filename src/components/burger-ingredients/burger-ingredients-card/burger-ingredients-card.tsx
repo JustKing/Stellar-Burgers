@@ -1,10 +1,11 @@
 import { memo, useState } from 'react';
+import { useDrag } from 'react-dnd';
 import { CurrencyIcon, Counter } from '@ya.praktikum/react-developer-burger-ui-components';
 
 import IngredientDetails from '../../ingredient-details/ingredient-details';
 import withModal from '../../../hocs/with-modal';
 import { useAppDispatch } from '../../../hooks/use-store';
-import { setIngredientDetail, reset } from '../../../store/reducers/ingredientDetail';
+import { setIngredientDetail, reset } from '../../../store/reducers/ingredientDetailSlice';
 
 import { ingredients } from '../../../interfaces/ingredients';
 
@@ -19,6 +20,15 @@ type Props = {
 const BurgerIngredientsCard = memo(({ value, isEven, count }: Props) => {
   const [openModal, setOpenModal] = useState(false);
   const dispatch = useAppDispatch();
+
+  const [, drag] = useDrag(
+    {
+      type: 'addIngredient',
+      item: { value }
+    },
+    [value]
+  );
+
   const WithModal = withModal(IngredientDetails);
 
   const onOpenModal = () => {
@@ -36,6 +46,7 @@ const BurgerIngredientsCard = memo(({ value, isEven, count }: Props) => {
       <div
         className={`${burgerIngredientsCardStyles.card} mb-8 ${isEven ? 'pr-2 pl-3' : 'pr-3 pl-4'}`}
         onClick={onOpenModal}
+        ref={drag}
       >
         <div className="p-relative">
           {count && <Counter count={count} size="default" />}

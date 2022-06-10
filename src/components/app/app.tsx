@@ -6,7 +6,7 @@ import BurgerIngredients from '../burger-ingredients/burger-ingredients';
 
 import { useAppDispatch } from '../../hooks/use-store';
 import { useFetchAllIngredientsQuery } from '../../store/services/ingredients';
-import { setBun, setMain } from '../../store/reducers/burgerConstructor';
+import { setBun, setMain } from '../../store/reducers/burgerConstructorSlice';
 
 import appStyles from './app.module.scss';
 

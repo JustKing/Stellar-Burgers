@@ -1,18 +1,46 @@
 import { memo, CSSProperties, useMemo } from 'react';
+import { useDrag, useDrop } from 'react-dnd';
 
 import { DragIcon, ConstructorElement } from '@ya.praktikum/react-developer-burger-ui-components';
 
 import { ingredients } from '../../../interfaces/ingredients';
+import { useAppDispatch } from '../../../hooks/use-store';
+import { moveMainIngredient } from '../../../store/reducers/burgerConstructorSlice';
 
 type Props = {
   ingredient: ingredients.ingredient;
   isLocked: boolean;
   handleClose: () => void;
   type?: 'top' | 'bottom';
+  uuid?: string;
   style?: CSSProperties;
 };
 
-const BurgerConstructorElement = memo(({ ingredient, isLocked, type, style, handleClose }: Props) => {
+interface IIngredient {
+  ingredient: ingredients.ingredient;
+}
+
+const BurgerConstructorElement = memo(({ ingredient, uuid, isLocked, type, style, handleClose }: Props) => {
+  const dispatch = useAppDispatch();
+  const [, drag] = useDrag(
+    {
+      type: 'moveIngredient',
+      item: { ingredient }
+    },
+    [ingredient]
+  );
+  const [handlerUuid, drop] = useDrop({
+    accept: 'moveIngredient',
+    collect(monitor) {
+      return (monitor.getItem() as IIngredient)?.ingredient.uuid;
+    },
+    hover() {
+      if (uuid && handlerUuid && uuid !== handlerUuid) {
+        dispatch(moveMainIngredient({ draggedUuid: handlerUuid, hoveredUuid: uuid }));
+      }
+    }
+  });
+
   const getTitle = useMemo(() => {
     if (type === 'top') {
       return `${ingredient.name} (верх)`;
@@ -32,7 +60,11 @@ const BurgerConstructorElement = memo(({ ingredient, isLocked, type, style, hand
   };
 
   return (
-    <div className={`${getBunMargin()} flex ai-center`} style={style}>
+    <div
+      className={`${getBunMargin()} flex ai-center`}
+      ref={(node) => (ingredient.type !== 'bun' ? drag(drop(node)) : {})}
+      style={{ ...style }}
+    >
       <span className={`${isLocked ? 'mr-8' : 'mr-2'}`}>{!isLocked && <DragIcon type="primary" />}</span>
       <ConstructorElement
         type={type}
