@@ -5,8 +5,7 @@ import BurgerConstructorPlug from './burger-constructor-plug/burger-constructor-
 import BurgerConstructorOrder from './burger-constructor-order/burger-constructor-order';
 
 import { useAppDispatch, useAppSelector } from '../../hooks/use-store';
-import { ingredientsApi } from '../../store/services/ingredients';
-import { moveMainIngredient, removeBun, removeMain } from '../../store/reducers/burgerConstructorSlice';
+import { setMain, removeBun, removeMain, setBun } from '../../store/reducers/burgerConstructorSlice';
 
 import { ingredients } from '../../interfaces/ingredients';
 import burgerConstructorStyles from './burger-constructor.module.scss';
@@ -19,16 +18,8 @@ type Props = {
 const gap = '10px';
 
 const BurgerConstructor = ({ offset }: Props) => {
-  const { currentData = [] } = ingredientsApi.useFetchAllIngredientsQuery([]);
   const burger = useAppSelector((state) => state.burger);
   const dispatch = useAppDispatch();
-
-  const findIngredient = useCallback(
-    (id: string) => {
-      return currentData?.find((ingredient) => ingredient._id === id) as ingredients.ingredient;
-    },
-    [currentData]
-  );
 
   const handleRemoveBun = useCallback(() => {
     dispatch(removeBun());
@@ -43,13 +34,13 @@ const BurgerConstructor = ({ offset }: Props) => {
 
   const [, drop] = useDrop(() => ({
     accept: 'addIngredient',
-    hover(item: any, monitor) {
-      console.log(item);
-      // const draggedUuid = item.ingredient.uuid;
-      // const hoverUuid = item.originalIngredient.uuid;
-      // if (item.originalIngredient.type !== 'bun' && draggedUuid && hoverUuid && draggedUuid !== hoverUuid) {
-      //   dispatch(moveMainIngredient({ draggedUuid, hoverUuid }));
-      // }
+    drop(item) {
+      const _item = item as { value: ingredients.ingredient };
+      if (_item.value.type === 'bun') {
+        dispatch(setBun(_item.value));
+      } else {
+        dispatch(setMain(_item.value));
+      }
     }
   }));
 
@@ -67,9 +58,9 @@ const BurgerConstructor = ({ offset }: Props) => {
               {burger.main.length > 0 ? (
                 burger.main.map(
                   (ingredient, key) =>
-                    findIngredient(ingredient._id) && (
+                    ingredient && (
                       <BurgerConstructorElement
-                        uuid={ingredient.uuid}
+                        uuid={ingredient?.uuid}
                         isLocked={false}
                         ingredient={ingredient}
                         key={`ingredients-${key}`}

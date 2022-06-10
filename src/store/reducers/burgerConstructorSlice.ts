@@ -54,7 +54,9 @@ export const burgerConstructorSlice = createSlice({
       state.bun = initialState.bun;
     },
     removeMain: (state, action: PayloadAction<number>) => {
-      state.main = state.main.filter((ingredient, key) => key !== action.payload);
+      state.main = state.main.filter(
+        (ingredient, key) => key !== (action.payload === -1 ? state.main.length : action.payload)
+      );
     },
     reset: (state) => {
       state = initialState;

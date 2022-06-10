@@ -6,6 +6,7 @@ import IngredientDetails from '../../ingredient-details/ingredient-details';
 import withModal from '../../../hocs/with-modal';
 import { useAppDispatch } from '../../../hooks/use-store';
 import { setIngredientDetail, reset } from '../../../store/reducers/ingredientDetailSlice';
+import { removeMain } from '../../../store/reducers/burgerConstructorSlice';
 
 import { ingredients } from '../../../interfaces/ingredients';
 
@@ -24,7 +25,13 @@ const BurgerIngredientsCard = memo(({ value, isEven, count }: Props) => {
   const [, drag] = useDrag(
     {
       type: 'addIngredient',
-      item: { value }
+      item: { value },
+      end: (item, monitor) => {
+        const didDrop = monitor.didDrop();
+        if (!didDrop) {
+          dispatch(removeMain(-1));
+        }
+      }
     },
     [value]
   );

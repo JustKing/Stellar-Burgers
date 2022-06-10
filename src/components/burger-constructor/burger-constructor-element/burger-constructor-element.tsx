@@ -31,9 +31,7 @@ const BurgerConstructorElement = memo(({ ingredient, uuid, isLocked, type, style
   );
   const [handlerUuid, drop] = useDrop({
     accept: 'moveIngredient',
-    collect(monitor) {
-      return (monitor.getItem() as IIngredient)?.ingredient.uuid;
-    },
+    collect: (monitor) => ((monitor.getItem() as IIngredient)?.ingredient?.uuid),
     hover() {
       if (uuid && handlerUuid && uuid !== handlerUuid) {
         dispatch(moveMainIngredient({ draggedUuid: handlerUuid, hoveredUuid: uuid }));
