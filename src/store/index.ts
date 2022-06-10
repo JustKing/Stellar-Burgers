@@ -5,13 +5,15 @@ import { ordersApi } from './services/orderDetail';
 import { burgerConstructorSlice } from './reducers/burgerConstructorSlice';
 import { ingredientDetailSlice } from './reducers/ingredientDetailSlice';
 import { totalPriceSlice } from './reducers/totalPriceSlice';
+import orderDetailSlice from './reducers/orderDetailSlice';
 
 const rootReducer = combineReducers({
   [ingredientsApi.reducerPath]: ingredientsApi.reducer,
   [ordersApi.reducerPath]: ordersApi.reducer,
   burger: burgerConstructorSlice.reducer,
   ingredientDetail: ingredientDetailSlice.reducer,
-  totalPrice: totalPriceSlice.reducer
+  totalPrice: totalPriceSlice.reducer,
+  orderDetail: orderDetailSlice
 });
 
 export const store = configureStore({

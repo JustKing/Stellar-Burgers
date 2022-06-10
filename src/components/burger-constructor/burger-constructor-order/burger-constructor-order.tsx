@@ -8,6 +8,7 @@ import { useAppDispatch, useAppSelector } from '../../../hooks/use-store';
 
 import { calculateTotalPrice, resetTotalPrice } from '../../../store/reducers/totalPriceSlice';
 import { useCreateOrderMutation } from '../../../store/services/orderDetail';
+import { resetOrderDetail, setOrderDetail, setOrderDetailError } from '../../../store/reducers/orderDetailSlice';
 
 const BurgerConstructorOrder = () => {
   const [openModal, setOpenModal] = useState(false);
@@ -15,15 +16,29 @@ const BurgerConstructorOrder = () => {
     burger: state.burger,
     totalPrice: state.totalPrice.totalPrice
   }));
-  const [createOrder, { isLoading, isError, data }] = useCreateOrderMutation();
+  const [createOrder, { data, isLoading, isError, isSuccess, error }] = useCreateOrderMutation();
   const dispatch = useAppDispatch();
 
   const WithModal = withModal(OrderDetails);
 
+  useEffect(() => {
+    if (isError && error) {
+      let errorMessage = '';
+      if ('status' in error) {
+        errorMessage = 'error' in error ? error.error : JSON.stringify(error.data);
+      } else {
+        errorMessage = `Ошибка ${error.message}`;
+      }
+      dispatch(setOrderDetailError(errorMessage));
+    }
+    if (isSuccess && data) {
+      dispatch(setOrderDetail({ name: data.name, number: data.order.number }));
+    }
+  }, [isError, isLoading, isSuccess, error, data, dispatch]);
+
   const handleCreateOrder = async () => {
     const ingredientIds = [burger.bun._id, ...burger.main.map((ingredient) => ingredient._id)];
     await createOrder(ingredientIds);
-    console.log(isError, data);
     onOpenModal();
   };
 
@@ -32,6 +47,7 @@ const BurgerConstructorOrder = () => {
   };
 
   const onCloseModal = () => {
+    dispatch(resetOrderDetail());
     setOpenModal(false);
   };
 

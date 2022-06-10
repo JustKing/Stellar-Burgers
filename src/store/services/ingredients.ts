@@ -4,7 +4,7 @@ import { ingredients } from '../../interfaces/ingredients';
 import { response } from '../../interfaces/response';
 
 export const ingredientsApi = createApi({
-  reducerPath: 'ingredients',
+  reducerPath: 'ingredientsApi',
   baseQuery: fetchBaseQuery({
     baseUrl: BASE_URL
   }),
