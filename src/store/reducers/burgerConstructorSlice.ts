@@ -58,12 +58,14 @@ export const burgerConstructorSlice = createSlice({
         (ingredient, key) => key !== (action.payload === -1 ? state.main.length : action.payload)
       );
     },
-    reset: (state) => {
-      state = initialState;
+    resetBurgerConstructor: (state) => {
+      state.main = initialState.main;
+      state.bun = initialState.bun;
     }
   }
 });
 
-export const { setBun, setMain, removeBun, removeMain, reset, moveMainIngredient } = burgerConstructorSlice.actions;
+export const { setBun, setMain, removeBun, removeMain, resetBurgerConstructor, moveMainIngredient } =
+  burgerConstructorSlice.actions;
 
 export default burgerConstructorSlice.reducer;

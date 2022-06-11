@@ -13,7 +13,7 @@ const BurgerConstructorElement = memo(({ type, style, isLocked }: Props) => {
     }
     return '';
   };
-  const text = () => (type === 'main' ? 'Выберите ингредиенты' : 'Выберите булку');
+  const text = () => (type === 'main' ? 'Перенесите сюда ингредиенты' : 'Перенесите сюда булку');
 
   return (
     <div className={`${getBunMargin()} flex ai-center`} style={style}>

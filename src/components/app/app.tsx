@@ -1,32 +1,16 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 
 import AppHeader from '../app-header/app-header';
 import BurgerConstructor from '../burger-constructor/burger-constructor';
 import BurgerIngredients from '../burger-ingredients/burger-ingredients';
 
-import { useAppDispatch } from '../../hooks/use-store';
 import { useFetchAllIngredientsQuery } from '../../store/services/ingredients';
-import { setBun, setMain } from '../../store/reducers/burgerConstructorSlice';
 
 import appStyles from './app.module.scss';
 
 const App = () => {
   const [offset, setOffset] = useState(0);
   const { data = [], error, isLoading, isSuccess, isError } = useFetchAllIngredientsQuery([]);
-  const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    if (data.length > 0) {
-      const buns = data.filter((ingredient) => ingredient.type === 'bun');
-      const mainIngredients = data.filter((ingredient) => ingredient.type !== 'bun');
-      for (let i = 0; i < 10; i++) {
-        const ingredient = mainIngredients[Math.round(Math.random() * (mainIngredients.length - 1))];
-        dispatch(setMain(ingredient));
-      }
-      const bun = data[Math.round(Math.random() * (buns.length - 1))];
-      dispatch(setBun(bun));
-    }
-  }, [data, dispatch]);
 
   const changeOffset = useCallback((offset: number) => {
     setOffset(offset);

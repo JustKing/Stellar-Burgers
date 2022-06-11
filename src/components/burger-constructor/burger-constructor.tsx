@@ -45,25 +45,25 @@ const BurgerConstructor = ({ offset }: Props) => {
   }));
 
   return (
-    <div className={`${burgerConstructorStyles.constructor} flex flex-column ml-5 mt-15 pr-4 pl-4`}>
+    <div className={`${burgerConstructorStyles.constructor} flex flex-column ml-5 mt-15 pr-4 pl-4`} ref={drop}>
       {burger && (
         <>
           <div className="mb-10 flex flex-column" style={{ height: `calc(100% - ${offset}px - ${gap}` }}>
-            {burger.bun ? (
+            {burger.bun._id ? (
               <BurgerConstructorElement isLocked ingredient={burger.bun} type="top" handleClose={handleRemoveBun} />
             ) : (
               <BurgerConstructorPlug type="top" isLocked />
             )}
-            <div className={`${burgerConstructorStyles.structure} flex flex-column`} ref={drop}>
+            <div className={`${burgerConstructorStyles.structure} flex flex-column`}>
               {burger.main.length > 0 ? (
                 burger.main.map(
                   (ingredient, key) =>
                     ingredient && (
                       <BurgerConstructorElement
-                        uuid={ingredient?.uuid}
+                        uuid={ingredient.uuid}
                         isLocked={false}
                         ingredient={ingredient}
-                        key={`ingredients-${key}`}
+                        key={ingredient.uuid}
                         handleClose={() => handleRemoveMain(key)}
                       />
                     )
@@ -72,7 +72,7 @@ const BurgerConstructor = ({ offset }: Props) => {
                 <BurgerConstructorPlug type="main" isLocked={false} />
               )}
             </div>
-            {burger.bun ? (
+            {burger.bun._id ? (
               <BurgerConstructorElement isLocked ingredient={burger.bun} type="bottom" handleClose={removeBun} />
             ) : (
               <BurgerConstructorPlug type="bottom" isLocked />

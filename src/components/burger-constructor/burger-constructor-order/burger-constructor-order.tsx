@@ -9,6 +9,7 @@ import { useAppDispatch, useAppSelector } from '../../../hooks/use-store';
 import { calculateTotalPrice, resetTotalPrice } from '../../../store/reducers/totalPriceSlice';
 import { useCreateOrderMutation } from '../../../store/services/orderDetail';
 import { resetOrderDetail, setOrderDetail, setOrderDetailError } from '../../../store/reducers/orderDetailSlice';
+import { resetBurgerConstructor } from '../../../store/reducers/burgerConstructorSlice';
 
 const BurgerConstructorOrder = () => {
   const [openModal, setOpenModal] = useState(false);
@@ -38,7 +39,13 @@ const BurgerConstructorOrder = () => {
 
   const handleCreateOrder = async () => {
     const ingredientIds = [burger.bun._id, ...burger.main.map((ingredient) => ingredient._id)];
-    await createOrder(ingredientIds);
+    await createOrder(ingredientIds).then((res) => {
+      if ('data' in res) {
+        if (res.data.success) {
+          dispatch(resetBurgerConstructor());
+        }
+      }
+    });
     onOpenModal();
   };
 
@@ -49,6 +56,10 @@ const BurgerConstructorOrder = () => {
   const onCloseModal = () => {
     dispatch(resetOrderDetail());
     setOpenModal(false);
+  };
+
+  const isDisabled = () => {
+    return !(burger.bun._id && burger.main.length > 0);
   };
 
   useEffect(() => {
@@ -69,7 +80,7 @@ const BurgerConstructorOrder = () => {
           <p className="text text_type_digits-medium mr-1">{totalPrice}</p>
           <CurrencyIcon type="primary" />
         </div>
-        <Button type="primary" size="medium" onClick={handleCreateOrder}>
+        <Button type="primary" size="medium" onClick={handleCreateOrder} disabled={isDisabled()}>
           Оформить заказ
         </Button>
       </div>
