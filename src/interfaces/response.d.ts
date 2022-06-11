@@ -1,9 +1,7 @@
-import { ingredients } from './ingredients';
-
 export namespace response {
-  export interface ingredient {
+  export interface response<T> {
     success: boolean;
-    data: ingredients.ingredient[];
+    data: T;
   }
   export interface order {
     name: string;

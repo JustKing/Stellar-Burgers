@@ -1,17 +1,15 @@
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 import BurgerIngredientsSection from './burger-ingredients-section/burger-ingredients-section';
 
 import { TABS } from '../../constants';
-
-import { useContext } from 'react';
-
-import { BurgerContext, IngredientsContext } from '../../services/burgerContext';
+import { ingredientsApi } from '../../store/services/ingredients';
 
 import { ingredients } from '../../interfaces/ingredients';
 
 import burgerIngredientsStyles from './burger-ingredients.module.scss';
+import { useAppSelector } from '../../hooks/use-store';
 
 type Props = {
   offset: number;
@@ -19,41 +17,54 @@ type Props = {
 
 const BurgerIngredients = ({ offset }: Props) => {
   const [activeTab, setActiveTabs] = useState('bun');
-
-  const { ingredients } = useContext(IngredientsContext);
-  const { burger } = useContext(BurgerContext);
+  const { currentData = [] } = ingredientsApi.useFetchAllIngredientsQuery([]);
+  const burger = useAppSelector((state) => state.burger);
+  const [bunIsIntersecting, setBunIsIntersecting] = useState(false);
+  const [mainIsIntersecting, setMainIsIntersecting] = useState(false);
+  const [sauceIsIntersecting, setSauceIsIntersecting] = useState(false);
 
   const sectionsRef = useRef<HTMLDivElement>(null);
   const bunsRef = useRef<HTMLElement>(null);
   const saucesRef = useRef<HTMLElement>(null);
   const mainsRef = useRef<HTMLElement>(null);
 
-  // #TODO - пока что неадекватит
-  // useEffect(() => {
-  //   const observer = new IntersectionObserver(
-  //     (entries) => {
-  //       entries.forEach((entry) => {
-  //         if (entry.isIntersecting) {
-  //           setActiveTabs(entry.target.id);
-  //         }
-  //       });
-  //     },
-  //     { threshold: [0.5] }
-  //   );
+  useEffect(() => {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.target.id === 'bun') {
+          setBunIsIntersecting(entry.isIntersecting);
+        }
+        if (entry.target.id === 'main') {
+          setMainIsIntersecting(entry.isIntersecting);
+        }
+        if (entry.target.id === 'sauce') {
+          setSauceIsIntersecting(entry.isIntersecting);
+        }
+      });
+    });
 
-  //   const buns = document.querySelector<HTMLElement>('section#bun');
-  //   const sauces = document.querySelector<HTMLElement>('section#sauce');
-  //   const mains = document.querySelector<HTMLElement>('section#main');
-  //   if (buns) {
-  //     observer.observe(buns);
-  //   }
-  //   if (sauces) {
-  //     observer.observe(sauces);
-  //   }
-  //   if (mains) {
-  //     observer.observe(mains);
-  //   }
-  // }, []);
+    if (bunsRef.current !== null) {
+      observer.observe(bunsRef.current);
+    }
+    if (saucesRef.current !== null) {
+      observer.observe(saucesRef.current);
+    }
+    if (mainsRef.current !== null) {
+      observer.observe(mainsRef.current);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (bunIsIntersecting) {
+      setActiveTabs('bun');
+    }
+    if (!bunIsIntersecting && sauceIsIntersecting) {
+      setActiveTabs('sauce');
+    }
+    if (!sauceIsIntersecting && mainIsIntersecting) {
+      setActiveTabs('main');
+    }
+  }, [bunIsIntersecting, mainIsIntersecting, sauceIsIntersecting]);
 
   const setCurrent = (tab: string) => {
     if (tab !== activeTab) {
@@ -68,7 +79,6 @@ const BurgerIngredients = ({ offset }: Props) => {
           mainsRef.current?.scrollIntoView({ behavior: 'smooth' });
           break;
       }
-      setActiveTabs(tab);
     }
   };
 
@@ -90,19 +100,19 @@ const BurgerIngredients = ({ offset }: Props) => {
   };
 
   const buns = useMemo(() => {
-    const buns = ingredients.ingredients.filter((ingredient) => ingredient.type === 'bun');
+    const buns = currentData.filter((ingredient) => ingredient.type === 'bun');
     return getIngredientsRows(buns);
-  }, [ingredients]);
+  }, [currentData]);
 
   const sauces = useMemo(() => {
-    const sauces = ingredients.ingredients.filter((ingredient) => ingredient.type === 'sauce');
+    const sauces = currentData?.filter((ingredient) => ingredient.type === 'sauce');
     return getIngredientsRows(sauces);
-  }, [ingredients]);
+  }, [currentData]);
 
   const mains = useMemo(() => {
-    const mains = ingredients.ingredients.filter((ingredient) => ingredient.type === 'main');
+    const mains = currentData.filter((ingredient) => ingredient.type === 'main');
     return getIngredientsRows(mains);
-  }, [ingredients]);
+  }, [currentData]);
 
   const ingredientsCounter = useMemo(() => {
     if (burger) {
@@ -138,6 +148,7 @@ const BurgerIngredients = ({ offset }: Props) => {
             ingredientsByRow={buns}
             ingredientsCounter={ingredientsCounter}
             ref={bunsRef}
+            id="bun"
           />
         )}
         {sauces && (
@@ -146,6 +157,7 @@ const BurgerIngredients = ({ offset }: Props) => {
             ingredientsByRow={sauces}
             ingredientsCounter={ingredientsCounter}
             ref={saucesRef}
+            id="sauce"
           />
         )}
         {mains && (
@@ -154,6 +166,7 @@ const BurgerIngredients = ({ offset }: Props) => {
             ingredientsByRow={mains}
             ingredientsCounter={ingredientsCounter}
             ref={mainsRef}
+            id="main"
           />
         )}
       </div>

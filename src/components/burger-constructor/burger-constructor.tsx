@@ -1,14 +1,15 @@
-import { useCallback, useContext } from 'react';
-
-import { BurgerContext, IngredientsContext } from '../../services/burgerContext';
+import { useCallback } from 'react';
 
 import BurgerConstructorElement from './burger-constructor-element/burger-constructor-element';
 import BurgerConstructorPlug from './burger-constructor-plug/burger-constructor-plug';
 import BurgerConstructorOrder from './burger-constructor-order/burger-constructor-order';
 
-import { ingredients } from '../../interfaces/ingredients';
+import { useAppDispatch, useAppSelector } from '../../hooks/use-store';
+import { setMain, removeBun, removeMain, setBun } from '../../store/reducers/burgerConstructorSlice';
 
+import { ingredients } from '../../interfaces/ingredients';
 import burgerConstructorStyles from './burger-constructor.module.scss';
+import { useDrop } from 'react-dnd';
 
 type Props = {
   offset: number;
@@ -17,39 +18,39 @@ type Props = {
 const gap = '10px';
 
 const BurgerConstructor = ({ offset }: Props) => {
-  const { ingredients } = useContext(IngredientsContext);
-  const { burger, burgerDispatcher } = useContext(BurgerContext);
+  const burger = useAppSelector((state) => state.burger);
+  const dispatch = useAppDispatch();
 
-  const findIngredient = useCallback(
-    (id: string) => {
-      return ingredients.ingredients.find((ingredient) => ingredient._id === id) as ingredients.ingredient;
-    },
-    [ingredients]
-  );
+  const handleRemoveBun = useCallback(() => {
+    dispatch(removeBun());
+  }, [dispatch]);
 
-  const removeBun = useCallback(() => {
-    burgerDispatcher({ type: 'remove-bun' });
-  }, [burgerDispatcher]);
-
-  const removeMain = useCallback(
+  const handleRemoveMain = useCallback(
     (id: number) => {
-      burgerDispatcher({ type: 'remove-main', payload: id });
+      dispatch(removeMain(id));
     },
-    [burgerDispatcher]
+    [dispatch]
   );
+
+  const [, drop] = useDrop(() => ({
+    accept: 'addIngredient',
+    drop(item) {
+      const _item = item as { value: ingredients.ingredient };
+      if (_item.value.type === 'bun') {
+        dispatch(setBun(_item.value));
+      } else {
+        dispatch(setMain(_item.value));
+      }
+    }
+  }));
 
   return (
-    <div className={`${burgerConstructorStyles.constructor} flex flex-column ml-5 mt-15 pr-4 pl-4`}>
+    <div className={`${burgerConstructorStyles.constructor} flex flex-column ml-5 mt-15 pr-4 pl-4`} ref={drop}>
       {burger && (
         <>
           <div className="mb-10 flex flex-column" style={{ height: `calc(100% - ${offset}px - ${gap}` }}>
-            {findIngredient(burger.bun._id) ? (
-              <BurgerConstructorElement
-                isLocked
-                ingredient={findIngredient(burger.bun._id)}
-                type="top"
-                handleClose={removeBun}
-              />
+            {burger.bun._id ? (
+              <BurgerConstructorElement isLocked ingredient={burger.bun} type="top" handleClose={handleRemoveBun} />
             ) : (
               <BurgerConstructorPlug type="top" isLocked />
             )}
@@ -57,12 +58,13 @@ const BurgerConstructor = ({ offset }: Props) => {
               {burger.main.length > 0 ? (
                 burger.main.map(
                   (ingredient, key) =>
-                    findIngredient(ingredient._id) && (
+                    ingredient && (
                       <BurgerConstructorElement
+                        uuid={ingredient.uuid}
                         isLocked={false}
-                        ingredient={findIngredient(ingredient._id)}
-                        key={`ingredients-${key}`}
-                        handleClose={() => removeMain(key)}
+                        ingredient={ingredient}
+                        key={ingredient.uuid}
+                        handleClose={() => handleRemoveMain(key)}
                       />
                     )
                 )
@@ -70,13 +72,8 @@ const BurgerConstructor = ({ offset }: Props) => {
                 <BurgerConstructorPlug type="main" isLocked={false} />
               )}
             </div>
-            {findIngredient(burger.bun._id) ? (
-              <BurgerConstructorElement
-                isLocked
-                ingredient={findIngredient(burger.bun._id)}
-                type="bottom"
-                handleClose={removeBun}
-              />
+            {burger.bun._id ? (
+              <BurgerConstructorElement isLocked ingredient={burger.bun} type="bottom" handleClose={removeBun} />
             ) : (
               <BurgerConstructorPlug type="bottom" isLocked />
             )}

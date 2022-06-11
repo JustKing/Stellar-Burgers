@@ -1,5 +1,3 @@
-import { ingredients } from './ingredients';
-
 export namespace order {
   export namespace context {
     type actions = { type: 'set'; payload: order } | { type: 'reset' } | { type: 'set-error'; payload: string };

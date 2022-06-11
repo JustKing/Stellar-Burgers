@@ -8,12 +8,13 @@ type Props = {
   title: string;
   ingredientsByRow: ingredients.ingredient[][];
   ingredientsCounter: { [key: string]: number };
+  id: string;
 };
 
 const BurgerIngredientsSection = memo(
-  forwardRef(({ title, ingredientsByRow, ingredientsCounter }: Props, ref: ForwardedRef<HTMLElement>) => {
+  forwardRef(({ title, ingredientsByRow, ingredientsCounter, id }: Props, ref: ForwardedRef<HTMLElement>) => {
     return (
-      <section className="mb-10" ref={ref}>
+      <section className="mb-10" ref={ref} id={id}>
         <p className="text text_type_main-medium mb-6">{title}</p>
         {ingredientsByRow.map((row, key) => {
           return (
