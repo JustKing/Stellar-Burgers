@@ -1,24 +1,16 @@
-import { useCallback, useState } from 'react';
-
-import AppHeader from '../app-header/app-header';
-import BurgerConstructor from '../burger-constructor/burger-constructor';
-import BurgerIngredients from '../burger-ingredients/burger-ingredients';
+import BurgerConstructor from '../../components/burger-constructor/burger-constructor';
+import BurgerIngredients from '../../components/burger-ingredients/burger-ingredients';
 
 import { useFetchAllIngredientsQuery } from '../../store/services/ingredients';
 
-import appStyles from './app.module.scss';
+import constructorStyles from './constructor.module.scss';
 
-const App = () => {
-  const [offset, setOffset] = useState(0);
+export const Constructor = ({ offset }: { offset: number }) => {
   const { data = [], error, isLoading, isSuccess, isError } = useFetchAllIngredientsQuery([]);
-
-  const changeOffset = useCallback((offset: number) => {
-    setOffset(offset);
-  }, []);
 
   const errorMessage = (message: string) => {
     return (
-      <div className={`${appStyles.error} flex jc-center ai-center`}>
+      <div className={`${constructorStyles.error} flex jc-center ai-center`}>
         <p className="text text_type_main-medium">{message}</p>
       </div>
     );
@@ -42,16 +34,11 @@ const App = () => {
   if (isSuccess && data.length > 0) {
     return (
       <>
-        <AppHeader changeOffset={changeOffset} />
-        <main className="flex container jc-center" style={{ height: `calc(100vh - ${offset}px)` }}>
-          <BurgerIngredients offset={offset} />
-          <BurgerConstructor offset={offset} />
-        </main>
+        <BurgerIngredients offset={offset} />
+        <BurgerConstructor offset={offset} />
       </>
     );
   }
 
   return errorMessage('Неопределенная ошибка');
 };
-
-export default App;

@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
-import App from './components/app/app';
+import App from './app';
 import { store } from './store';
 
 import '@ya.praktikum/react-developer-burger-ui-components';
