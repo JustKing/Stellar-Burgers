@@ -30,6 +30,10 @@ nav.nav {
     & > li {
       cursor: pointer;
       color: var(--text-inactive-color);
+      & > .link {
+        text-decoration: none;
+        color: inherit;
+      }
       &.selected {
         color: var(--text-primary-color);
       }

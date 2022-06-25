@@ -1,36 +1,84 @@
-import { useRef, useState } from 'react';
+import { SyntheticEvent, useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Input, Button } from '@ya.praktikum/react-developer-burger-ui-components';
 
 import authModules from '../auth.module.scss';
-import { Link } from 'react-router-dom';
+import { useRegisterMutation } from '../../../store/services/auth';
+import { useAuth } from '../../../hooks/use-auth';
 
 export const Register = () => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [form, setForm] = useState({
+    name: {
+      value: '',
+      error: false
+    },
+    email: {
+      value: '',
+      error: false
+    },
+    password: {
+      value: '',
+      error: false
+    }
+  });
+
   const [type, setType] = useState<'password' | 'text'>('password');
   const nameRef = useRef(null);
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
 
+  const [register, { isLoading, isError }] = useRegisterMutation();
+  const { setUserInfo } = useAuth();
+
   const onIconClick = () => {
     setType(type === 'password' ? 'text' : 'password');
   };
 
+  const handleFormChange = (e: SyntheticEvent) => {
+    const target = e.target as HTMLInputElement;
+    setForm({ ...form, [target.name]: { value: target.value, error: target.value === '' } });
+  };
+
+  const handleForm = async (e: SyntheticEvent) => {
+    e.preventDefault();
+    if (
+      !form.name.error &&
+      form.name.value &&
+      !form.email.error &&
+      form.email.value &&
+      !form.password.error &&
+      form.password.value
+    ) {
+      await register({ name: form.name.value, email: form.email.value, password: form.password.value }).then(
+        (response) => {
+          if ('data' in response) {
+            if (response.data.success) {
+              setUserInfo(response.data);
+            }
+          }
+        }
+      );
+    }
+  };
+
+  if (isLoading) {
+    return <div className="loading" />;
+  }
+
   return (
     <div className={`${authModules['auth-container']} flex flex-column ta-center mt-30`}>
       <p className="text text_type_main-medium mb-6">Регистрация</p>
-      <form className="mb-20">
-      <div className="mb-6">
+      <form className="mb-20" onChange={handleFormChange} onSubmit={handleForm}>
+        <div className="mb-6">
           <Input
             type={'text'}
             placeholder={'Имя'}
-            onChange={(e) => setName(e.target.value)}
-            value={name}
+            onChange={() => {}}
+            value={form.name.value}
             name={'name'}
-            error={false}
+            error={form.name.error}
             ref={nameRef}
-            errorText={'Ошибка'}
+            errorText={'Введите имя'}
             size={'default'}
           />
         </div>
@@ -38,12 +86,12 @@ export const Register = () => {
           <Input
             type={'email'}
             placeholder={'E-mail'}
-            onChange={(e) => setEmail(e.target.value)}
-            value={email}
+            onChange={() => {}}
+            value={form.email.value}
             name={'email'}
-            error={false}
+            error={form.email.error}
             ref={emailRef}
-            errorText={'Ошибка'}
+            errorText={'Введите валидный email'}
             size={'default'}
           />
         </div>
@@ -51,14 +99,14 @@ export const Register = () => {
           <Input
             type={type}
             placeholder={'Пароль'}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={() => {}}
             icon={type === 'password' ? 'ShowIcon' : 'HideIcon'}
-            value={password}
+            value={form.password.value}
             name={'password'}
-            error={false}
+            error={form.password.error}
             ref={passwordRef}
             onIconClick={onIconClick}
-            errorText={'Ошибка'}
+            errorText={'Введите пароль'}
             size={'default'}
           />
         </div>
@@ -66,6 +114,13 @@ export const Register = () => {
           Зарегистрироваться
         </Button>
       </form>
+      {isError && (
+        <div className="mb-4 jc-center">
+          <p className={`${authModules['text_error']} text text_type_main-default`}>
+            Возникла ошибка при регистрации, проверьте правильность заполненных полей!
+          </p>
+        </div>
+      )}
       <div className="mb-4 flex flex-row jc-center">
         <p className="text text_type_main-default text_color_inactive mr-2">Уже зарегистрированы?</p>
         <p className="text text_type_main-default">

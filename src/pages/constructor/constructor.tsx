@@ -5,7 +5,7 @@ import { useFetchAllIngredientsQuery } from '../../store/services/ingredients';
 
 import constructorStyles from './constructor.module.scss';
 
-export const Constructor = ({ offset }: { offset: number }) => {
+export const Constructor = () => {
   const { data = [], error, isLoading, isSuccess, isError } = useFetchAllIngredientsQuery([]);
 
   const errorMessage = (message: string) => {
@@ -34,8 +34,8 @@ export const Constructor = ({ offset }: { offset: number }) => {
   if (isSuccess && data.length > 0) {
     return (
       <>
-        <BurgerIngredients offset={offset} />
-        <BurgerConstructor offset={offset} />
+        <BurgerIngredients />
+        <BurgerConstructor />
       </>
     );
   }

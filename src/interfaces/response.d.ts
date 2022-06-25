@@ -10,4 +10,23 @@ export namespace response {
     };
     success: boolean;
   }
+
+  export namespace auth {
+    export interface body {
+      email: string;
+      password: string;
+      name?: string;
+    }
+    export interface request {
+      success: boolean;
+      user: user;
+      accessToken: string;
+      refreshToken: string;
+    }
+
+    export interface user {
+      email: string;
+      name: string;
+    }
+  }
 }

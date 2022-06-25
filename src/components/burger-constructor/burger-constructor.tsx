@@ -11,14 +11,13 @@ import { ingredients } from '../../interfaces/ingredients';
 import burgerConstructorStyles from './burger-constructor.module.scss';
 import { useDrop } from 'react-dnd';
 
-type Props = {
-  offset: number;
-};
-
 const gap = '10px';
 
-const BurgerConstructor = ({ offset }: Props) => {
-  const burger = useAppSelector((state) => state.burger);
+const BurgerConstructor = () => {
+  const { burger, offset } = useAppSelector((state) => ({
+    burger: state.burger,
+    offset: state.base.offset
+  }));
   const dispatch = useAppDispatch();
 
   const handleRemoveBun = useCallback(() => {
