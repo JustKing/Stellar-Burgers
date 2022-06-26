@@ -10,8 +10,12 @@ import { calculateTotalPrice, resetTotalPrice } from '../../../store/reducers/to
 import { useCreateOrderMutation } from '../../../store/services/orderDetail';
 import { resetOrderDetail, setOrderDetail, setOrderDetailError } from '../../../store/reducers/orderDetailSlice';
 import { resetBurgerConstructor } from '../../../store/reducers/burgerConstructorSlice';
+import { useAuth } from '../../../hooks/use-auth';
+import { useNavigate } from 'react-router-dom';
 
 const BurgerConstructorOrder = () => {
+  const { isAuth } = useAuth();
+  const navigate = useNavigate();
   const [openModal, setOpenModal] = useState(false);
   const { burger, totalPrice } = useAppSelector((state) => ({
     burger: state.burger,
@@ -38,15 +42,19 @@ const BurgerConstructorOrder = () => {
   }, [isError, isLoading, isSuccess, error, data, dispatch]);
 
   const handleCreateOrder = async () => {
-    const ingredientIds = [burger.bun._id, ...burger.main.map((ingredient) => ingredient._id)];
-    await createOrder(ingredientIds).then((res) => {
-      if ('data' in res) {
-        if (res.data.success) {
-          dispatch(resetBurgerConstructor());
+    if (isAuth) {
+      const ingredientIds = [burger.bun._id, ...burger.main.map((ingredient) => ingredient._id)];
+      await createOrder(ingredientIds).then((res) => {
+        if ('data' in res) {
+          if (res.data.success) {
+            dispatch(resetBurgerConstructor());
+          }
         }
-      }
-    });
-    onOpenModal();
+      });
+      onOpenModal();
+    } else {
+      navigate('/login');
+    }
   };
 
   const onOpenModal = () => {

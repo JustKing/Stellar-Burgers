@@ -5,7 +5,7 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { BrowserRouter } from 'react-router-dom';
 
-import App from './app';
+import App from './components/app/app';
 import { store } from './store';
 
 import '@ya.praktikum/react-developer-burger-ui-components';

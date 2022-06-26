@@ -71,7 +71,7 @@ export const ResetPassword = () => {
       <div className="mb-4 flex flex-row jc-center">
         <p className="text text_type_main-default text_color_inactive mr-2">Вспомнили пароль?</p>
         <p className="text text_type_main-default">
-          <Link to={'/login'} className={`authModules['text_decoration_none'] text_color_accent`}>
+          <Link to={'/login'} className={`${authModules['text_decoration_none']} text_color_accent`}>
             Войти
           </Link>
         </p>

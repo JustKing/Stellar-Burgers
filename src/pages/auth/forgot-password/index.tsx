@@ -2,7 +2,7 @@ import { SyntheticEvent, useRef, useState } from 'react';
 import { Input, Button } from '@ya.praktikum/react-developer-burger-ui-components';
 
 import authModules from '../auth.module.scss';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useForgotPasswordMutation } from '../../../store/services/auth';
 
 export const ForgotPassword = () => {
@@ -10,11 +10,12 @@ export const ForgotPassword = () => {
   const [email, setEmail] = useState('');
   const emailRef = useRef(null);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const onSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
     await forgotPassword({ email }).then(() => {
-      navigate('/reset-password');
+      navigate('/reset-password', { state: { from: location } });
     });
   };
 

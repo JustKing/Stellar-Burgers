@@ -14,19 +14,19 @@ const modalRoot = document.getElementById('modal-root') as HTMLElement;
 const Modal = () => {
   const navigate = useNavigate();
 
+  const onClose = useCallback(() => {
+    navigate(-1);
+  }, [navigate]);
+
   const handleEscape = useCallback(
     (e: KeyboardEvent) => {
       if (e.code === 'Escape' || e.key === 'Escape') {
         e.preventDefault();
-        navigate(-1);
+        onClose();
       }
     },
-    [navigate]
+    [onClose]
   );
-
-  const onClose = () => {
-    navigate(-1);
-  };
 
   useEffect(() => {
     document.addEventListener('keydown', handleEscape);

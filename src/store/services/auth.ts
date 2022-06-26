@@ -18,59 +18,56 @@ export const authApi = createApi({
     }
   }),
   endpoints: (build) => ({
+    getUserInfo: build.query<Partial<response.auth.request>, string>({
+      query: (param) => ({
+        url: 'auth/user',
+        method: 'GET',
+        headers: {
+          authorization: param ? `Bearer ${param}` : ''
+        }
+      })
+    }),
     forgotPassword: build.mutation<response.auth.reset, { email: string }>({
-      query: (body) => {
-        return {
-          url: 'password-reset',
-          method: 'POST',
-          body: { ...body }
-        };
-      }
+      query: (body) => ({
+        url: 'password-reset',
+        method: 'POST',
+        body: { ...body }
+      })
     }),
     resetPassword: build.mutation<response.auth.reset, { token: string; password: string }>({
-      query: (body) => {
-        return {
-          url: 'password-reset/reset',
-          method: 'POST',
-          body: { ...body }
-        };
-      }
+      query: (body) => ({
+        url: 'password-reset/reset',
+        method: 'POST',
+        body: { ...body }
+      })
     }),
     login: build.mutation<response.auth.request, response.auth.body>({
-      query: (body) => {
-        return {
-          url: 'auth/login',
-          method: 'POST',
-          body: { ...body }
-        };
-      }
+      query: (body) => ({
+        url: 'auth/login',
+        method: 'POST',
+        body: { ...body }
+      })
     }),
     register: build.mutation<response.auth.request, response.auth.body>({
-      query: (body) => {
-        return {
-          url: 'auth/register',
-          method: 'POST',
-          body: { ...body }
-        };
-      }
+      query: (body) => ({
+        url: 'auth/register',
+        method: 'POST',
+        body: { ...body }
+      })
     }),
     refreshToken: build.mutation<Partial<response.auth.request>, { token: string }>({
-      query: (body) => {
-        return {
-          url: 'auth/token',
-          method: 'POST',
-          body: { ...body }
-        };
-      }
+      query: (body) => ({
+        url: 'auth/token',
+        method: 'POST',
+        body: { ...body }
+      })
     }),
     updateUserInfo: build.mutation<Partial<response.auth.request>, Partial<profile.user>>({
-      query: (body) => {
-        return {
-          url: 'auth/user',
-          method: 'PATCH',
-          body: { ...body }
-        };
-      }
+      query: (body) => ({
+        url: 'auth/user',
+        method: 'PATCH',
+        body: { ...body }
+      })
     })
   })
 });
@@ -81,5 +78,6 @@ export const {
   useRegisterMutation,
   useRefreshTokenMutation,
   useForgotPasswordMutation,
-  useResetPasswordMutation
+  useResetPasswordMutation,
+  useGetUserInfoQuery
 } = authApi;

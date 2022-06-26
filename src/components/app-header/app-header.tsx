@@ -50,7 +50,9 @@ const AppHeader = () => {
           </li>
         </ul>
         <p className={appHeaderStyles.logo}>
-          <Logo />
+          <Link to="/" className={`${appHeaderStyles.link} flex js-center ai-center`}>
+            <Logo />
+          </Link>
         </p>
         <ul className={`${appHeaderStyles['no-type']} flex`}>
           <li className="flex pl-5 pr-5 pt-4 pb-4">
