@@ -34,11 +34,8 @@ nav.nav {
         text-decoration: none;
         color: inherit;
       }
-      &.selected {
-        color: var(--text-primary-color);
-      }
-      &:hover {
-        color: var(--text-primary-color);
+      & p:hover {
+        color: var(--text-primary-color) !important;
       }
     }
   }

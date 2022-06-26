@@ -3,5 +3,6 @@ export namespace profile {
     name: string;
     email: string;
     token: string;
+    password?: string;
   }
 }

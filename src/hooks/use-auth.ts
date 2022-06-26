@@ -18,22 +18,28 @@ export const useAuth = () => {
   };
 
   const setUserInfo = (data: Partial<response.auth.request>) => {
-    if (data?.success && data?.accessToken && data?.refreshToken) {
-      const token = data.accessToken.split('Bearer ')[1];
-      const decodedToken = JSON.parse(atob(token.split('.')[1])) as { id: string; exp: number; iat: number };
-      if (data?.user) {
-        dispatch(setUser({ ...data.user, token }));
-      } else {
-        dispatch(setUser({ ...user, token }));
+    if (data?.success) {
+      const token = data?.accessToken?.split('Bearer ')[1] || cookie.getCookie('accessToken');
+      if (token) {
+        if (data?.user) {
+          dispatch(setUser({ ...data.user, token }));
+        } else {
+          dispatch(setUser({ ...user, token }));
+        }
+        if (data?.accessToken) {
+          const decodedToken = JSON.parse(atob(token.split('.')[1])) as { id: string; exp: number; iat: number };
+          cookie.setCookie('accessToken', token, decodedToken.exp - decodedToken.iat);
+        }
+        if (data?.refreshToken) {
+          cookie.setCookie('refreshToken', data.refreshToken);
+        }
       }
-      cookie.setCookie('accessToken', token, decodedToken.exp - decodedToken.iat);
-      cookie.setCookie('refreshToken', data.refreshToken);
     }
   };
 
   const refreshAccessToken = async () => {
     const refreshTokenCookie = cookie.getCookie('refreshToken');
-    if (!isAuth && refreshTokenCookie) {
+    if (refreshTokenCookie) {
       await refreshToken({ token: refreshTokenCookie })
         .then((response) => {
           if ('data' in response) {
@@ -50,11 +56,16 @@ export const useAuth = () => {
     }
   };
 
+  const logout = () => {
+    removeUserInfo();
+  };
+
   return {
     isAuth,
     refreshAccessToken,
     user,
     setUserInfo,
-    removeUserInfo
+    removeUserInfo,
+    logout
   };
 };

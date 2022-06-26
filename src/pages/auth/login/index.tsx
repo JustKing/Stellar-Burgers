@@ -88,7 +88,7 @@ export const Login = () => {
       </form>
       {isError && (
         <div className="mb-4 jc-center">
-          <p className={`${authModules['text_error']} text text_type_main-default`}>
+          <p className={`${authModules['text_decoration_none']} text text_type_main-default text_color_error`}>
             Возникла ошибка при входе, проверьте правильность заполненных полей!
           </p>
         </div>
@@ -96,7 +96,7 @@ export const Login = () => {
       <div className="mb-4 flex flex-row jc-center">
         <p className="text text_type_main-default text_color_inactive mr-2">Вы — новый пользователь?</p>
         <p className="text text_type_main-default">
-          <Link to={'/register'} className={authModules['text_link']}>
+          <Link to={'/register'} className={`${authModules['text_decoration_none']} text_color_accent`}>
             Зарегистрироваться
           </Link>
         </p>
@@ -104,7 +104,7 @@ export const Login = () => {
       <div className="flex flex-row jc-center mb-4">
         <p className="text text_type_main-default text_color_inactive mr-2">Забыли пароль?</p>
         <p className="text text_type_main-default">
-          <Link to={'/forgot-password'} className={authModules['text_link']}>
+          <Link to={'/forgot-password'} className={`${authModules['text_decoration_none']} text_color_accent`}>
             Восстановить пароль
           </Link>
         </p>

@@ -1,6 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { RootState } from '..';
 import { BASE_URL } from '../../constants';
+import { profile } from '../../interfaces/profile';
 import { response } from '../../interfaces/response';
 
 export const authApi = createApi({
@@ -17,6 +18,24 @@ export const authApi = createApi({
     }
   }),
   endpoints: (build) => ({
+    forgotPassword: build.mutation<response.auth.reset, { email: string }>({
+      query: (body) => {
+        return {
+          url: 'password-reset',
+          method: 'POST',
+          body: { ...body }
+        };
+      }
+    }),
+    resetPassword: build.mutation<response.auth.reset, { token: string; password: string }>({
+      query: (body) => {
+        return {
+          url: 'password-reset/reset',
+          method: 'POST',
+          body: { ...body }
+        };
+      }
+    }),
     login: build.mutation<response.auth.request, response.auth.body>({
       query: (body) => {
         return {
@@ -43,8 +62,24 @@ export const authApi = createApi({
           body: { ...body }
         };
       }
+    }),
+    updateUserInfo: build.mutation<Partial<response.auth.request>, Partial<profile.user>>({
+      query: (body) => {
+        return {
+          url: 'auth/user',
+          method: 'PATCH',
+          body: { ...body }
+        };
+      }
     })
   })
 });
 
-export const { useLoginMutation, useRegisterMutation, useRefreshTokenMutation } = authApi;
+export const {
+  useUpdateUserInfoMutation,
+  useLoginMutation,
+  useRegisterMutation,
+  useRefreshTokenMutation,
+  useForgotPasswordMutation,
+  useResetPasswordMutation
+} = authApi;

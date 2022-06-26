@@ -28,5 +28,10 @@ export namespace response {
       email: string;
       name: string;
     }
+
+    export interface reset {
+      token: string;
+      email: string;
+    }
   }
 }

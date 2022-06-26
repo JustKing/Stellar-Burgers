@@ -4,7 +4,6 @@ import { ingredientsApi } from './services/ingredients';
 import { ordersApi } from './services/orderDetail';
 import { authApi } from './services/auth';
 import burgerConstructorSlice from './reducers/burgerConstructorSlice';
-import ingredientDetailSlice from './reducers/ingredientDetailSlice';
 import totalPriceSlice from './reducers/totalPriceSlice';
 import orderDetailSlice from './reducers/orderDetailSlice';
 import profileSlice from './reducers/profileSlice';
@@ -15,7 +14,6 @@ const rootReducer = combineReducers({
   [ordersApi.reducerPath]: ordersApi.reducer,
   [authApi.reducerPath]: authApi.reducer,
   burger: burgerConstructorSlice,
-  ingredientDetail: ingredientDetailSlice,
   totalPrice: totalPriceSlice,
   orderDetail: orderDetailSlice,
   profile: profileSlice,
@@ -24,7 +22,8 @@ const rootReducer = combineReducers({
 
 export const store = configureStore({
   reducer: rootReducer,
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware()
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(ingredientsApi.middleware).concat(ordersApi.middleware).concat(authApi.middleware)
 });
 
 export type RootState = ReturnType<typeof store.getState>;

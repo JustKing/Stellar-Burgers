@@ -116,7 +116,7 @@ export const Register = () => {
       </form>
       {isError && (
         <div className="mb-4 jc-center">
-          <p className={`${authModules['text_error']} text text_type_main-default`}>
+          <p className={`${authModules['text_decoration_none']} text text_type_main-default text_color_error`}>
             Возникла ошибка при регистрации, проверьте правильность заполненных полей!
           </p>
         </div>
@@ -124,7 +124,7 @@ export const Register = () => {
       <div className="mb-4 flex flex-row jc-center">
         <p className="text text_type_main-default text_color_inactive mr-2">Уже зарегистрированы?</p>
         <p className="text text_type_main-default">
-          <Link to={'/login'} className={authModules['text_link']}>
+          <Link to={'/login'} className={`${authModules['text_decoration_none']} text_color_accent`}>
             Войти
           </Link>
         </p>

@@ -2,15 +2,6 @@
   width: 480px;
 }
 
-.text {
-  &_link,
-  &_error {
-    text-decoration: none;
-  }
-  &_link {
-    color: var(--colors-interface-accent);
-  }
-  &_error {
-    color: var(--colors-interface-error);
-  }
+.text_decoration_none {
+  text-decoration: none;
 }

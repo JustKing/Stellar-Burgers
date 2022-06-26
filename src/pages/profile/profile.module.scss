@@ -1,0 +1,20 @@
+.auth-container {
+  width: 480px;
+}
+
+.text_decoration_none {
+  text-decoration: none;
+}
+
+.vertical-menu {
+  width: 320px;
+  & > ul {
+    margin-top: 0;
+    padding: 0;
+    list-style-type: none;
+    & > li {
+      height: 64px;
+      cursor: pointer;
+    }
+  }
+}
