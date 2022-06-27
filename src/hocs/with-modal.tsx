@@ -1,4 +1,4 @@
-import { Component, ComponentType, SyntheticEvent } from 'react';
+import { Component, ComponentType } from 'react';
 import Modal from '../components/modal/modal';
 import { ingredients } from '../interfaces/ingredients';
 import { order } from '../interfaces/order';
@@ -13,11 +13,6 @@ type Props = {
 
 const withModal = (WrappedComponent: ComponentType<{ ingredient?: ingredients.ingredient; order?: order.order }>) =>
   class extends Component<Props> {
-    handleOpenModal = (e: SyntheticEvent<HTMLElement, MouseEvent>) => {
-      e.preventDefault();
-      this.props.onClose();
-    };
-
     render() {
       return (
         this.props.openModal && (

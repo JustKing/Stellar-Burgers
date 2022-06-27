@@ -9,6 +9,10 @@
   width: 100%;
 }
 
+.mr-320 {
+  margin-right: 320px;
+}
+
 .container {
   max-width: 1240px;
   margin: 0 auto;
@@ -46,6 +50,13 @@ div[class^='tab'] {
     border-radius: 50%;
     filter: drop-shadow(0 0 10px var(--colors-interface-success));
     animation: border 5s linear infinite;
+  }
+}
+
+.input__container {
+  width: 100%;
+  & > .input {
+    width: 100%;
   }
 }
 

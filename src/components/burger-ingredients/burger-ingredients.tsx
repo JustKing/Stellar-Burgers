@@ -11,14 +11,13 @@ import { ingredients } from '../../interfaces/ingredients';
 import burgerIngredientsStyles from './burger-ingredients.module.scss';
 import { useAppSelector } from '../../hooks/use-store';
 
-type Props = {
-  offset: number;
-};
-
-const BurgerIngredients = ({ offset }: Props) => {
+const BurgerIngredients = () => {
   const [activeTab, setActiveTabs] = useState('bun');
   const { currentData = [] } = ingredientsApi.useFetchAllIngredientsQuery([]);
-  const burger = useAppSelector((state) => state.burger);
+  const { burger, offset } = useAppSelector((state) => ({
+    burger: state.burger,
+    offset: state.base.offset
+  }));
   const [bunIsIntersecting, setBunIsIntersecting] = useState(false);
   const [mainIsIntersecting, setMainIsIntersecting] = useState(false);
   const [sauceIsIntersecting, setSauceIsIntersecting] = useState(false);

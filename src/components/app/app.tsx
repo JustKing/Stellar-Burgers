@@ -1,57 +1,82 @@
-import { useCallback, useState } from 'react';
-
-import AppHeader from '../app-header/app-header';
-import BurgerConstructor from '../burger-constructor/burger-constructor';
-import BurgerIngredients from '../burger-ingredients/burger-ingredients';
-
-import { useFetchAllIngredientsQuery } from '../../store/services/ingredients';
-
-import appStyles from './app.module.scss';
+import { useEffect, useState } from 'react';
+import { Route, Routes, useLocation } from 'react-router-dom';
+import { Layout } from '../layout';
+import Modal from '../modalOutlet/modal';
+import { ProtectedRoute } from '../protected-route/protected-route';
+import { useAuth } from '../../hooks/use-auth';
+import { useCookie } from '../../hooks/use-cookie';
+import { useAppDispatch } from '../../hooks/use-store';
+import { ForgotPassword, Login, Register, ResetPassword } from '../../pages/auth';
+import { Constructor } from '../../pages/constructor/constructor';
+import { Ingredient } from '../../pages/ingredient';
+import { Profile } from '../../pages/profile';
+import { setUser } from '../../store/reducers/profileSlice';
+import { useGetUserInfoQuery } from '../../store/services/auth';
 
 const App = () => {
-  const [offset, setOffset] = useState(0);
-  const { data = [], error, isLoading, isSuccess, isError } = useFetchAllIngredientsQuery([]);
+  const [loading, setLoading] = useState(true);
+  const { isAuth, refreshAccessToken } = useAuth();
+  const accessToken = useCookie().getCookie('accessToken');
+  const dispatch = useAppDispatch();
+  const location = useLocation();
+  const [refreshIsProccess, setRefreshIsProccess] = useState(false);
+  const background = location.state && (location.state as any).background;
+  const { data, isLoading, isError, isSuccess, error } = useGetUserInfoQuery(accessToken || '');
 
-  const changeOffset = useCallback((offset: number) => {
-    setOffset(offset);
-  }, []);
-
-  const errorMessage = (message: string) => {
-    return (
-      <div className={`${appStyles.error} flex jc-center ai-center`}>
-        <p className="text text_type_main-medium">{message}</p>
-      </div>
-    );
+  const checkData = () => {
+    if (data?.success && data && 'user') {
+      if (data.user?.name && data.user.email) {
+        dispatch(
+          setUser({
+            ...data.user,
+            token: accessToken || ''
+          })
+        );
+      }
+    }
   };
 
-  if (isLoading) {
+  useEffect(() => {
+    if (isAuth) {
+      setLoading(false);
+      checkData();
+    } else {
+      setLoading(true);
+      if (isError && 'status' in error && error.status === 401) {
+        if (!refreshIsProccess) {
+          setRefreshIsProccess(true);
+          refreshAccessToken();
+        }
+      }
+      if (isSuccess && accessToken) {
+        checkData();
+      }
+      setLoading(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [accessToken, isError, error, dispatch, isAuth, isSuccess]);
+
+  if (loading || isLoading) {
     return <div className="loading" />;
   }
 
-  if (isError) {
-    if (error) {
-      if ('status' in error) {
-        const errMsg = 'error' in error ? error.error : JSON.stringify(error.data);
-        return errorMessage(errMsg);
-      } else {
-        return errorMessage(`Ошибка ${error.message}`);
-      }
-    }
-  }
-
-  if (isSuccess && data.length > 0) {
-    return (
-      <>
-        <AppHeader changeOffset={changeOffset} />
-        <main className="flex container jc-center" style={{ height: `calc(100vh - ${offset}px)` }}>
-          <BurgerIngredients offset={offset} />
-          <BurgerConstructor offset={offset} />
-        </main>
-      </>
-    );
-  }
-
-  return errorMessage('Неопределенная ошибка');
+  return (
+    <Routes>
+      <Route path="/" element={<Layout />}>
+        <Route index element={<Constructor />} />
+        <Route path="/ingredients/:id" element={background ? <Modal /> : <Ingredient />} />
+        <Route element={<ProtectedRoute />}>
+          <Route path="/profile" element={<Profile />} />
+        </Route>
+        <Route element={<ProtectedRoute anonymous />}>
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
+        </Route>
+      </Route>
+    </Routes>
+  );
 };
 
 export default App;

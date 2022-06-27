@@ -1,16 +1,14 @@
-import { memo, useState } from 'react';
+import { memo } from 'react';
 import { useDrag } from 'react-dnd';
 import { CurrencyIcon, Counter } from '@ya.praktikum/react-developer-burger-ui-components';
 
-import IngredientDetails from '../../ingredient-details/ingredient-details';
-import withModal from '../../../hocs/with-modal';
 import { useAppDispatch } from '../../../hooks/use-store';
-import { setIngredientDetail, reset } from '../../../store/reducers/ingredientDetailSlice';
 import { removeMain } from '../../../store/reducers/burgerConstructorSlice';
 
 import { ingredients } from '../../../interfaces/ingredients';
 
 import burgerIngredientsCardStyles from './burger-ingredients-card.module.scss';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 type Props = {
   value: ingredients.ingredient;
@@ -19,8 +17,9 @@ type Props = {
 };
 
 const BurgerIngredientsCard = memo(({ value, isEven, count }: Props) => {
-  const [openModal, setOpenModal] = useState(false);
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const [, drag] = useDrag(
     {
@@ -36,23 +35,11 @@ const BurgerIngredientsCard = memo(({ value, isEven, count }: Props) => {
     [value]
   );
 
-  const WithModal = withModal(IngredientDetails);
-
-  const onOpenModal = () => {
-    dispatch(setIngredientDetail(value));
-    setOpenModal(true);
-  };
-
-  const onCloseModal = () => {
-    dispatch(reset());
-    setOpenModal(false);
-  };
-
   return (
     <>
       <div
         className={`${burgerIngredientsCardStyles.card} mb-8 ${isEven ? 'pr-2 pl-3' : 'pr-3 pl-4'}`}
-        onClick={onOpenModal}
+        onClick={() => navigate(`ingredients/${value._id}`, { state: { background: location } })}
         ref={drag}
       >
         <div className="p-relative">
@@ -65,7 +52,6 @@ const BurgerIngredientsCard = memo(({ value, isEven, count }: Props) => {
         </div>
         <p className="text text_type_main-default flex jc-center ta-center pb-6">{value.name}</p>
       </div>
-      <WithModal openModal={openModal} onClose={onCloseModal} header="Детали ингредиента" />
     </>
   );
 });

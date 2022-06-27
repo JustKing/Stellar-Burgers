@@ -1,15 +1,18 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { Logo, BurgerIcon, ProfileIcon, ListIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 
+import { useAppDispatch } from '../../hooks/use-store';
+import { setOffset } from '../../store/reducers/baseSlice';
+
 import appHeaderStyles from './app-header.module.scss';
+import { Link, useLocation } from 'react-router-dom';
 
-type Props = {
-  changeOffset: Function;
-};
-
-const AppHeader = ({ changeOffset }: Props) => {
+const AppHeader = () => {
   const headerRef = useRef<HTMLElement>(null);
+  const dispatch = useAppDispatch();
+  const location = useLocation();
+  const [currentLocation, setCurrentLocation] = useState('');
 
   useEffect(() => {
     let offset = 0;
@@ -18,16 +21,28 @@ const AppHeader = ({ changeOffset }: Props) => {
       const margin = parseFloat(styles['marginTop']) + parseFloat(styles['marginBottom']);
       offset = headerRef.current.clientHeight + margin;
     }
-    changeOffset(offset);
-  }, [changeOffset]);
+    dispatch(setOffset(offset));
+  }, [dispatch]);
+
+  useEffect(() => {
+    setCurrentLocation(location.pathname.split('/')[1]);
+  }, [location]);
 
   return (
     <header className={`${appHeaderStyles.header} p-4 mb-10`} ref={headerRef}>
       <nav className={appHeaderStyles.nav}>
         <ul className={`${appHeaderStyles['no-type']} flex`}>
-          <li className="flex pl-5 pr-5 pt-4 pb-4 selected">
-            <BurgerIcon type="primary" />
-            <p className="text text_type_main-default pl-2">Конструктор</p>
+          <li className="flex pl-5 pr-5 pt-4 pb-4">
+            <Link to="/" className={`${appHeaderStyles.link} flex jc-center ai-center`}>
+              <BurgerIcon type={currentLocation === '' ? 'primary' : 'secondary'} />
+              <p
+                className={`text_color_${
+                  currentLocation === '' ? 'primary' : 'inactive'
+                } text text_type_main-default pl-2`}
+              >
+                Конструктор
+              </p>
+            </Link>
           </li>
           <li className="flex ml-2 pl-5 pr-5 pt-4 pb-4">
             <ListIcon type="secondary" />
@@ -35,12 +50,22 @@ const AppHeader = ({ changeOffset }: Props) => {
           </li>
         </ul>
         <p className={appHeaderStyles.logo}>
-          <Logo />
+          <Link to="/" className={`${appHeaderStyles.link} flex js-center ai-center`}>
+            <Logo />
+          </Link>
         </p>
         <ul className={`${appHeaderStyles['no-type']} flex`}>
           <li className="flex pl-5 pr-5 pt-4 pb-4">
-            <ProfileIcon type="secondary" />
-            <p className="text text_type_main-default pl-2">Личный кабинет</p>
+            <Link to="/profile" className={`${appHeaderStyles.link} flex jc-center ai-center`}>
+              <ProfileIcon type={currentLocation === 'profile' ? 'primary' : 'secondary'} />
+              <p
+                className={`text_color_${
+                  currentLocation === 'profile' ? 'primary' : 'inactive'
+                } text text_type_main-default pl-2`}
+              >
+                Личный кабинет
+              </p>
+            </Link>
           </li>
         </ul>
       </nav>

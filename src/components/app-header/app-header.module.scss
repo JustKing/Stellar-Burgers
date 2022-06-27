@@ -30,11 +30,12 @@ nav.nav {
     & > li {
       cursor: pointer;
       color: var(--text-inactive-color);
-      &.selected {
-        color: var(--text-primary-color);
+      & > .link {
+        text-decoration: none;
+        color: inherit;
       }
-      &:hover {
-        color: var(--text-primary-color);
+      & p:hover {
+        color: var(--text-primary-color) !important;
       }
     }
   }
