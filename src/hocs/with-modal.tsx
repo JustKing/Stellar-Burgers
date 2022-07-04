@@ -1,11 +1,11 @@
-import { Component, ComponentType } from 'react';
+import { Component, ComponentType, MouseEventHandler } from 'react';
 import Modal from '../components/modal/modal';
 import { ingredients } from '../interfaces/ingredients';
 import { order } from '../interfaces/order';
 
 type Props = {
   openModal: boolean;
-  onClose: Function;
+  onClose: MouseEventHandler<HTMLDivElement>;
   header?: string;
   ingredient?: ingredients.ingredient;
   order?: order.order;

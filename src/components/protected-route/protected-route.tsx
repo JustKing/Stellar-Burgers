@@ -8,13 +8,15 @@ type Props = {
 export const ProtectedRoute = ({ anonymous }: Props) => {
   const { isAuth } = useAuth();
   const location = useLocation();
-  const from = (location.state as any)?.from || '/';
+  const from: 'string' | Location = (location.state as any)?.from || '/';
 
-  if (location.pathname === '/reset-password') {
-    if (from.pathname === '/forgot-password') {
-      return <Outlet />;
-    } else {
-      return <Navigate to="/login" />;
+  if (typeof from === 'object') {
+    if (location.pathname === '/reset-password') {
+      if (from.pathname === '/forgot-password') {
+        return <Outlet />;
+      } else {
+        return <Navigate to="/login" />;
+      }
     }
   }
 

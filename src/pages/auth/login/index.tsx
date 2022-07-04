@@ -5,9 +5,10 @@ import authModules from '../auth.module.scss';
 import { Link } from 'react-router-dom';
 import { useLoginMutation } from '../../../store/services/auth';
 import { useAuth } from '../../../hooks/use-auth';
+import { profile } from '../../../interfaces/profile';
 
 export const Login = () => {
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<profile.authForm<'email' | 'password'>>({
     email: {
       value: '',
       error: false
@@ -19,8 +20,8 @@ export const Login = () => {
   });
 
   const [type, setType] = useState<'password' | 'text'>('password');
-  const emailRef = useRef(null);
-  const passwordRef = useRef(null);
+  const emailRef = useRef<HTMLInputElement>(null);
+  const passwordRef = useRef<HTMLInputElement>(null);
   const [login, { isLoading, isError }] = useLoginMutation();
   const { setUserInfo } = useAuth();
 

@@ -16,10 +16,6 @@ type Props = {
   style?: CSSProperties;
 };
 
-interface IIngredient {
-  ingredient: ingredients.ingredient;
-}
-
 const BurgerConstructorElement = memo(({ ingredient, uuid, isLocked, type, style, handleClose }: Props) => {
   const dispatch = useAppDispatch();
   const [, drag] = useDrag(
@@ -31,7 +27,7 @@ const BurgerConstructorElement = memo(({ ingredient, uuid, isLocked, type, style
   );
   const [handlerUuid, drop] = useDrop({
     accept: 'moveIngredient',
-    collect: (monitor) => ((monitor.getItem() as IIngredient)?.ingredient?.uuid),
+    collect: (monitor) => (monitor.getItem() as { ingredient: ingredients.ingredient })?.ingredient?.uuid,
     hover() {
       if (uuid && handlerUuid && uuid !== handlerUuid) {
         dispatch(moveMainIngredient({ draggedUuid: handlerUuid, hoveredUuid: uuid }));

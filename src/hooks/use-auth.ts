@@ -1,4 +1,4 @@
-import { response } from '../interfaces/response';
+import { api } from '../interfaces/api';
 import { resetUser, setUser } from '../store/reducers/profileSlice';
 import { useRefreshTokenMutation } from '../store/services/auth';
 import { useCookie } from './use-cookie';
@@ -17,7 +17,7 @@ export const useAuth = () => {
     dispatch(resetUser());
   };
 
-  const setUserInfo = (data: Partial<response.auth.request>) => {
+  const setUserInfo = (data: Partial<api.response.auth.user>) => {
     if (data?.success) {
       const token = data?.accessToken?.split('Bearer ')[1] || cookie.getCookie('accessToken');
       if (token) {

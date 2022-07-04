@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { RootState } from '..';
 import { BASE_URL } from '../../constants';
 import { ingredients } from '../../interfaces/ingredients';
-import { response } from '../../interfaces/response';
+import { api } from '../../interfaces/api';
 
 export const ingredientsApi = createApi({
   reducerPath: 'ingredientsApi',
@@ -23,7 +23,7 @@ export const ingredientsApi = createApi({
   endpoints: (build) => ({
     fetchAllIngredients: build.query<ingredients.ingredient[], any>({
       query: () => `ingredients`,
-      transformResponse: (response: response.response<ingredients.ingredient[]>) => response.data
+      transformResponse: (response: api.response.response<ingredients.ingredient[]>) => response.data
     })
   })
 });

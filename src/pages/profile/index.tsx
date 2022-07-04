@@ -5,13 +5,14 @@ import profileStyles from './profile.module.scss';
 import { useAuth } from '../../hooks/use-auth';
 import { useUpdateUserInfoMutation } from '../../store/services/auth';
 import { useCookie } from '../../hooks/use-cookie';
+import { profile } from '../../interfaces/profile';
 
 export const Profile = () => {
   const { user, setUserInfo, refreshAccessToken, logout } = useAuth();
   const [updateUserInfo, { isLoading, isError }] = useUpdateUserInfoMutation();
   const cookie = useCookie();
 
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<profile.authForm<'name' | 'email' | 'password', { disabled: boolean }>>({
     name: {
       value: '',
       error: false,

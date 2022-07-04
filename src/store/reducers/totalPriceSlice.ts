@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { burger } from '../../interfaces/burger';
 
-const initialState = {
+const initialState: { totalPrice: number } = {
   totalPrice: 0
 };
 

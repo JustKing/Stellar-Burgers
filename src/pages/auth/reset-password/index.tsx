@@ -6,11 +6,11 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useResetPasswordMutation } from '../../../store/services/auth';
 
 export const ResetPassword = () => {
-  const [password, setPassword] = useState('');
-  const [code, setCode] = useState('');
+  const [password, setPassword] = useState<string>('');
+  const [code, setCode] = useState<string>('');
   const [type, setType] = useState<'password' | 'text'>('password');
-  const passwordRef = useRef(null);
-  const codeRef = useRef(null);
+  const passwordRef = useRef<HTMLInputElement>(null);
+  const codeRef = useRef<HTMLInputElement>(null);
   const [resetPassword, { isError }] = useResetPasswordMutation();
   const navigate = useNavigate();
 

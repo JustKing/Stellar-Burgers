@@ -5,4 +5,11 @@ export namespace profile {
     token: string;
     password?: string;
   }
+
+  export type authForm<T, A = {}> = {
+    [key in T]: {
+      value: string;
+      error: boolean;
+    } & A;
+  };
 }

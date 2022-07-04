@@ -16,7 +16,7 @@ import { useNavigate } from 'react-router-dom';
 const BurgerConstructorOrder = () => {
   const { isAuth } = useAuth();
   const navigate = useNavigate();
-  const [openModal, setOpenModal] = useState(false);
+  const [openModal, setOpenModal] = useState<boolean>(false);
   const { burger, totalPrice } = useAppSelector((state) => ({
     burger: state.burger,
     totalPrice: state.totalPrice.totalPrice
