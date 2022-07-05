@@ -7,7 +7,7 @@ import { useForgotPasswordMutation } from '../../../store/services/auth';
 
 export const ForgotPassword = () => {
   const [forgotPassword, { isError }] = useForgotPasswordMutation();
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState<string>('');
   const emailRef = useRef(null);
   const navigate = useNavigate();
   const location = useLocation();

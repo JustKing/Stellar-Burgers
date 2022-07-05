@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { profile } from '../../interfaces/profile';
 
-const initialState = {
+const initialState: Omit<profile.user, 'password'> = {
   email: '',
   name: '',
   token: ''

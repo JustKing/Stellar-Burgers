@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { RootState } from '..';
 import { BASE_URL } from '../../constants';
-import { response } from '../../interfaces/response';
+import { api } from '../../interfaces/api';
 
 export const ordersApi = createApi({
   reducerPath: 'orderDetailApi',
@@ -20,14 +20,12 @@ export const ordersApi = createApi({
     }
   }),
   endpoints: (build) => ({
-    createOrder: build.mutation<response.order, string[]>({
-      query: (body: string[]) => {
-        return {
-          url: 'orders',
-          method: 'POST',
-          body: { ingredients: body }
-        };
-      }
+    createOrder: build.mutation<api.response.order, string[]>({
+      query: (body) => ({
+        url: 'orders',
+        method: 'POST',
+        body: { ingredients: body }
+      })
     })
   })
 });

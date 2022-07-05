@@ -5,9 +5,10 @@ import { Input, Button } from '@ya.praktikum/react-developer-burger-ui-component
 import authModules from '../auth.module.scss';
 import { useRegisterMutation } from '../../../store/services/auth';
 import { useAuth } from '../../../hooks/use-auth';
+import { profile } from '../../../interfaces/profile';
 
 export const Register = () => {
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<profile.authForm<'email' | 'password' | 'name'>>({
     name: {
       value: '',
       error: false
@@ -23,8 +24,8 @@ export const Register = () => {
   });
 
   const [type, setType] = useState<'password' | 'text'>('password');
-  const nameRef = useRef(null);
-  const emailRef = useRef(null);
+  const nameRef = useRef<HTMLInputElement>(null);
+  const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef(null);
 
   const [register, { isLoading, isError }] = useRegisterMutation();

@@ -14,18 +14,20 @@ import { setUser } from '../../store/reducers/profileSlice';
 import { useGetUserInfoQuery } from '../../store/services/auth';
 
 const App = () => {
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [refreshIsProccess, setRefreshIsProccess] = useState<boolean>(false);
+
   const { isAuth, refreshAccessToken } = useAuth();
   const accessToken = useCookie().getCookie('accessToken');
   const dispatch = useAppDispatch();
   const location = useLocation();
-  const [refreshIsProccess, setRefreshIsProccess] = useState(false);
-  const background = location.state && (location.state as any).background;
   const { data, isLoading, isError, isSuccess, error } = useGetUserInfoQuery(accessToken || '');
 
+  const background = location.state && (location.state as any).background;
+
   const checkData = () => {
-    if (data?.success && data && 'user') {
-      if (data.user?.name && data.user.email) {
+    if (data?.success && data.user) {
+      if (data.user.name && data.user.email) {
         dispatch(
           setUser({
             ...data.user,
