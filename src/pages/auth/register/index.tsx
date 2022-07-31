@@ -1,4 +1,4 @@
-import { SyntheticEvent, useRef, useState } from 'react';
+import { SyntheticEvent, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Input, Button } from '@ya.praktikum/react-developer-burger-ui-components';
 
@@ -6,8 +6,11 @@ import authModules from '../auth.module.scss';
 import { useRegisterMutation } from '../../../store/services/auth';
 import { useAuth } from '../../../hooks/use-auth';
 import { profile } from '../../../interfaces/profile';
+import { useAppDispatch } from '../../../hooks/use-store';
+import { setIsCenter } from '../../../store/reducers/baseSlice';
 
 export const Register = () => {
+  const dispatch = useAppDispatch();
   const [form, setForm] = useState<profile.authForm<'email' | 'password' | 'name'>>({
     name: {
       value: '',
@@ -30,6 +33,11 @@ export const Register = () => {
 
   const [register, { isLoading, isError }] = useRegisterMutation();
   const { setUserInfo } = useAuth();
+
+  useEffect(() => {
+    dispatch(setIsCenter(true));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const onIconClick = () => {
     setType(type === 'password' ? 'text' : 'password');

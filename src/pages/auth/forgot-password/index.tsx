@@ -1,16 +1,24 @@
-import { SyntheticEvent, useRef, useState } from 'react';
+import { SyntheticEvent, useEffect, useRef, useState } from 'react';
 import { Input, Button } from '@ya.praktikum/react-developer-burger-ui-components';
 
 import authModules from '../auth.module.scss';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useForgotPasswordMutation } from '../../../store/services/auth';
+import { useAppDispatch } from '../../../hooks/use-store';
+import { setIsCenter } from '../../../store/reducers/baseSlice';
 
 export const ForgotPassword = () => {
+  const dispatch = useAppDispatch();
   const [forgotPassword, { isError }] = useForgotPasswordMutation();
   const [email, setEmail] = useState<string>('');
   const emailRef = useRef(null);
   const navigate = useNavigate();
   const location = useLocation();
+
+  useEffect(() => {
+    dispatch(setIsCenter(true));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const onSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();

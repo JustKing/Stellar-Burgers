@@ -1,11 +1,14 @@
-import { SyntheticEvent, useRef, useState } from 'react';
+import { SyntheticEvent, useEffect, useRef, useState } from 'react';
 import { Input, Button } from '@ya.praktikum/react-developer-burger-ui-components';
 
 import authModules from '../auth.module.scss';
 import { Link, useNavigate } from 'react-router-dom';
 import { useResetPasswordMutation } from '../../../store/services/auth';
+import { useAppDispatch } from '../../../hooks/use-store';
+import { setIsCenter } from '../../../store/reducers/baseSlice';
 
 export const ResetPassword = () => {
+  const dispatch = useAppDispatch();
   const [password, setPassword] = useState<string>('');
   const [code, setCode] = useState<string>('');
   const [type, setType] = useState<'password' | 'text'>('password');
@@ -13,6 +16,11 @@ export const ResetPassword = () => {
   const codeRef = useRef<HTMLInputElement>(null);
   const [resetPassword, { isError }] = useResetPasswordMutation();
   const navigate = useNavigate();
+  
+  useEffect(() => {
+    dispatch(setIsCenter(true));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const onIconClick = () => {
     setType(type === 'password' ? 'text' : 'password');

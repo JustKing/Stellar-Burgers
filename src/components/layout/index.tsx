@@ -5,12 +5,15 @@ import { useAppSelector } from '../../hooks/use-store';
 import AppHeader from '../app-header/app-header';
 
 export const Layout = () => {
-  const offset = useAppSelector((state) => state.base.offset);
+  const baseStore = useAppSelector((state) => state.base);
 
   return (
     <>
       <AppHeader />
-      <main className="flex container jc-center" style={{ height: `calc(100vh - ${offset}px)` }}>
+      <main
+        className={`flex container ${baseStore.isCenter ? 'jc-center' : 'jc-flex-start'}`}
+        style={{ height: `calc(100vh - ${baseStore.offset}px)` }}
+      >
         <Outlet />
       </main>
     </>

@@ -1,7 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-const initialState: { offset: number } = {
-  offset: 0
+const initialState: { offset: number; isCenter: boolean } = {
+  offset: 0,
+  isCenter: false
 };
 
 export const baseSlice = createSlice({
@@ -13,10 +14,13 @@ export const baseSlice = createSlice({
     },
     resetOffset(state) {
       state.offset = initialState.offset;
+    },
+    setIsCenter(state, action: PayloadAction<boolean>) {
+      state.isCenter = action.payload;
     }
   }
 });
 
-export const { setOffset, resetOffset } = baseSlice.actions;
+export const { setOffset, resetOffset, setIsCenter } = baseSlice.actions;
 
 export default baseSlice.reducer;

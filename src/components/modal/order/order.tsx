@@ -4,14 +4,14 @@ import { useNavigate } from 'react-router-dom';
 
 import { CloseIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 
-import ModalOverlay from '../modal-overlay/modal-overlay';
+import ModalOverlay from '../overlay';
 
-import withModalStyles from './modal.module.scss';
-import IngredientDetails from '../ingredient-details/ingredient-details';
+import withModalStyles from '../modal.module.scss';
+import { OrdersDetail } from '../../orders/detail';
 
 const modalRoot = document.getElementById('modal-root') as HTMLElement;
 
-const Modal = () => {
+const ModalOrder = () => {
   const navigate = useNavigate();
 
   const onClose = useCallback(() => {
@@ -44,7 +44,7 @@ const Modal = () => {
             <CloseIcon type="primary" onClick={onClose} />
           </div>
         </div>
-        <IngredientDetails />
+        <OrdersDetail />
       </div>
       <ModalOverlay onClose={onClose} />
     </>,
@@ -52,4 +52,4 @@ const Modal = () => {
   );
 };
 
-export default Modal;
+export default ModalOrder;

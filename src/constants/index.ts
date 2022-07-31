@@ -13,6 +13,13 @@ const TABS = [
   }
 ];
 
-const BASE_URL = 'https://norma.nomoreparties.space/api';
+const STATUSES = {
+  done: 'Выполнен',
+  pending: 'Готовится',
+  created: 'Создан'
+};
 
-export { TABS, BASE_URL };
+const BASE_URL = 'https://norma.nomoreparties.space/api';
+const ORDERS_WSS = 'wss://norma.nomoreparties.space/orders';
+
+export { TABS, STATUSES, BASE_URL, ORDERS_WSS };

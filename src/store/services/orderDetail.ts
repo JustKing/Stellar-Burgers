@@ -26,8 +26,11 @@ export const ordersApi = createApi({
         method: 'POST',
         body: { ingredients: body }
       })
+    }),
+    fetchOrder: build.query<Omit<api.response.orders, 'total' | 'totalToday'>, string>({
+      query: (orderId) => `orders/${orderId}`,
     })
   })
 });
 
-export const { useCreateOrderMutation } = ordersApi;
+export const { useCreateOrderMutation, useLazyFetchOrderQuery } = ordersApi;
