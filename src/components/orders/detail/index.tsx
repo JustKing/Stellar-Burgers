@@ -2,7 +2,7 @@ import { memo, useCallback, useEffect, useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useLazyFetchOrderQuery } from '../../../store/services/orderDetail';
 import { order as IOrder } from '../../../interfaces/order';
-import { STATUSES } from '../../../constants';
+import { ONE_DAY, STATUSES } from '../../../constants';
 import { useFetchAllIngredientsQuery } from '../../../store/services/ingredients';
 import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { ingredients } from '../../../interfaces/ingredients';
@@ -40,8 +40,8 @@ export const OrdersDetail = memo(() => {
     if (currentOrder?.createdAt) {
       const createdDate = new Date(currentOrder.createdAt);
       const createdMilliseconds = createdDate.getTime();
-      const currentMilliseconds = new Date().getTime();
-      const diffDays = currentMilliseconds / createdMilliseconds;
+      const currentMilliseconds = new Date().setHours(23, 59, 59);
+      const diffDays = (currentMilliseconds - createdMilliseconds) / ONE_DAY;
       if (diffDays <= 1) {
         return `Сегодня, ${createdDate.toLocaleTimeString()}, i-GMT${createdDate.getTimezoneOffset() / 60}`;
       } else if (diffDays <= 2) {

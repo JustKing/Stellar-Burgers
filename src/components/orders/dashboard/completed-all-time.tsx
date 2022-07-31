@@ -3,7 +3,7 @@ import { useGetOrdersQuery } from '../../../store/services/orders';
 import styles from './dashboard-styles.module.scss';
 
 export const CompletedAllTime = ({ anonymous }: { anonymous: boolean }) => {
-  const { currentData = [] } = useGetOrdersQuery(anonymous);
+  const { currentData = [] } = useGetOrdersQuery({ anonymous, url: 'all' });
 
   const total = useCallback(() => {
     return currentData[currentData.length - 1]?.total;

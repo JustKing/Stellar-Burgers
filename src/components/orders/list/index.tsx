@@ -3,7 +3,7 @@ import { useGetOrdersQuery } from '../../../store/services/orders';
 import { Order } from './order';
 
 export const OrdersList = ({ anonymous, needStatus }: { anonymous: boolean; needStatus: boolean }) => {
-  const { currentData = [] } = useGetOrdersQuery(anonymous);
+  const { currentData = [] } = useGetOrdersQuery({ anonymous, url: 'all' });
 
   const orders = useCallback(() => currentData[currentData.length - 1]?.orders, [currentData]);
 

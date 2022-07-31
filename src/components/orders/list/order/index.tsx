@@ -1,7 +1,7 @@
 import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { STATUSES } from '../../../../constants';
+import { ONE_DAY, STATUSES } from '../../../../constants';
 import { order } from '../../../../interfaces/order';
 import { useFetchAllIngredientsQuery } from '../../../../store/services/ingredients';
 import styles from './order.module.scss';
@@ -14,8 +14,8 @@ export const Order = ({ order, needStatus }: { order: order.orderInList; needSta
   const createdAt = useCallback(() => {
     const createdDate = new Date(order.createdAt);
     const createdMilliseconds = createdDate.getTime();
-    const currentMilliseconds = new Date().getTime();
-    const diffDays = currentMilliseconds / createdMilliseconds;
+    const currentMilliseconds = new Date().setHours(23, 59, 59);
+    const diffDays = (currentMilliseconds - createdMilliseconds) / ONE_DAY;
     if (diffDays <= 1) {
       return `Сегодня, ${createdDate.toLocaleTimeString()}, i-GMT${createdDate.getTimezoneOffset() / 60}`;
     } else if (diffDays <= 2) {
@@ -65,7 +65,7 @@ export const Order = ({ order, needStatus }: { order: order.orderInList; needSta
         </div>
         <div className={styles['images-wrapper']}>
           {orderIngredients().map(
-            (ingredient: any, key: number) =>
+            (ingredient, key) =>
               ingredient && (
                 <img className={styles.ingredient} src={ingredient.image_mobile} alt={ingredient.name} key={key} />
               )

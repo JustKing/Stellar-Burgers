@@ -20,13 +20,13 @@ export const ordersWsApi = createApi({
     }
   }),
   endpoints: (build) => ({
-    getOrders: build.query<api.response.orders[], boolean>({
-      queryFn(anonymous) {
+    getOrders: build.query<api.response.orders[], { anonymous: boolean; url: string }>({
+      queryFn() {
         return { data: [] };
       },
       async onCacheEntryAdded(arg, { updateCachedData, cacheDataLoaded, cacheEntryRemoved, getState }) {
-        let url = `${ORDERS_WSS}/all`;
-        if (!arg) {
+        let url = `${ORDERS_WSS}/${arg.url}`;
+        if (!arg.anonymous) {
           const token = (getState() as RootState).profile.token;
           url += `?token=${token}`;
         }
@@ -48,7 +48,7 @@ export const ordersWsApi = createApi({
             console.log('closed connection');
           };
 
-          const onErrorWs = (evt: any) => {
+          const onErrorWs = () => {
             console.log('connection error');
           };
 

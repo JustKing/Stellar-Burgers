@@ -9,7 +9,7 @@ import { setIsCenter } from '../../store/reducers/baseSlice';
 export const Feed = () => {
   // socket connection
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { data = [] } = useGetOrdersQuery(true);
+  const { data = [] } = useGetOrdersQuery({ anonymous: true, url: 'all' });
   const dispatch = useAppDispatch();
 
   useEffect(() => {

@@ -3,8 +3,8 @@ import { order } from '../../../interfaces/order';
 import { useGetOrdersQuery } from '../../../store/services/orders';
 import styles from './dashboard-styles.module.scss';
 
-export const OrdersList = ({ status, anonymous }: { status: order.statusTypes, anonymous: boolean }) => {
-  const { currentData = [] } = useGetOrdersQuery(anonymous);
+export const OrdersList = ({ status, anonymous }: { status: order.statusTypes; anonymous: boolean }) => {
+  const { currentData = [] } = useGetOrdersQuery({ anonymous, url: 'all' });
 
   const ordersByStatus = useCallback(
     () => currentData[currentData.length - 1]?.orders.filter((order) => order.status === status),
