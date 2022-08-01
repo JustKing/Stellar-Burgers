@@ -1,3 +1,5 @@
+@import '../../assets/styles/mixins/vertical-scrollbar';
+
 .flex {
   display: flex;
   &-column {
@@ -21,6 +23,9 @@
   }
   &-space-between {
     justify-content: space-between;
+  }
+  &-flex-start {
+    justify-content: flex-start;
   }
 }
 
@@ -49,4 +54,9 @@
   .o-#{$i} {
     opacity: calc($i / 10);
   }
+}
+
+.scroll {
+  overflow-y: auto;
+  @include scrollbar;
 }

@@ -1,119 +1,47 @@
-import { ChangeEvent, useCallback, useEffect, useRef, useState } from 'react';
-import { Button, Input } from '@ya.praktikum/react-developer-burger-ui-components';
-
-import profileStyles from './profile.module.scss';
 import { useAuth } from '../../hooks/use-auth';
-import { useUpdateUserInfoMutation } from '../../store/services/auth';
-import { useCookie } from '../../hooks/use-cookie';
-import { profile } from '../../interfaces/profile';
+import profileStyles from './profile.module.scss';
+import { ProfileSettings } from './profile-settings';
+import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
+import { ProfileOrder } from './order';
+import { useEffect, useMemo } from 'react';
+import { useAppDispatch } from '../../hooks/use-store';
+import { setIsCenter } from '../../store/reducers/baseSlice';
 
 export const Profile = () => {
-  const { user, setUserInfo, refreshAccessToken, logout } = useAuth();
-  const [updateUserInfo, { isLoading, isError }] = useUpdateUserInfoMutation();
-  const cookie = useCookie();
-
-  const [form, setForm] = useState<profile.authForm<'name' | 'email' | 'password', { disabled: boolean }>>({
-    name: {
-      value: '',
-      error: false,
-      disabled: true
-    },
-    email: {
-      value: '',
-      error: false,
-      disabled: true
-    },
-    password: {
-      value: '',
-      error: false,
-      disabled: true
-    }
-  });
-
-  const nameRef = useRef(null);
-  const emailRef = useRef(null);
-  const passwordRef = useRef(null);
+  const dispatch = useAppDispatch();
+  const { logout } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
-    resetForm();
+    dispatch(setIsCenter(false));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user]);
+  }, []);
 
-  const onIconClick = async (fieldType: keyof typeof form) => {
-    if (!form[fieldType].disabled) {
-      if (fieldType === 'password') {
-        setForm({
-          ...form,
-          [fieldType]: { ...form[fieldType], disabled: !form[fieldType].disabled, value: '' }
-        });
-      } else {
-        setForm({
-          ...form,
-          [fieldType]: { ...form[fieldType], disabled: !form[fieldType].disabled, value: user[fieldType] }
-        });
-      }
-    } else {
-      setForm({ ...form, [fieldType]: { ...form[fieldType], disabled: !form[fieldType].disabled } });
-    }
-  };
-
-  const onChange = (fieldType: keyof typeof form, val: ChangeEvent<HTMLInputElement>) => {
-    if (!val.target.value) {
-      setForm({ ...form, [fieldType]: { ...form[fieldType], error: true, value: val.target.value } });
-    } else {
-      setForm({ ...form, [fieldType]: { ...form[fieldType], error: false, value: val.target.value } });
-    }
-  };
-
-  const changedFields = useCallback(() => {
-    const changed: { [key: string]: string | number } = {};
-    if (form.name.value !== user.name) {
-      changed['name'] = form.name.value;
-    }
-    if (form.email.value !== user.email) {
-      changed['email'] = form.email.value;
-    }
-    if (form.password.value !== '') {
-      changed['password'] = form.password.value;
-    }
-
-    return changed;
-  }, [form, user]);
-
-  const resetForm = () => {
-    setForm({
-      name: { ...form.name, value: user.name, disabled: true },
-      email: { ...form.email, value: user.email, disabled: true },
-      password: { ...form.password, value: '', disabled: true }
-    });
-  };
-
-  const saveUserInfo = async () => {
-    if (!cookie.getCookie('accessToken')) {
-      await refreshAccessToken();
-    }
-    await updateUserInfo({ ...changedFields() }).then((response) => {
-      if ('data' in response) {
-        if (response.data.success) {
-          setUserInfo(response.data);
-        }
-      }
-    });
-  };
-
-  if (isLoading) {
-    return <div className="loading" />;
-  }
+  const locationName = useMemo(() => {
+    const partsOfPathName = location.pathname.split('/');
+    return partsOfPathName[partsOfPathName.length - 1];
+  }, [location]);
 
   return (
-    <div className="flex flex-row mt-30 mr-320">
-      <div className={profileStyles['vertical-menu']}>
+    <div className="flex flex-row mt-30">
+      <div className={`${profileStyles['vertical-menu']} mr-15`}>
         <ul className="mb-20">
           <li className="flex ai-center">
-            <p className="text text_type_main-medium">Профиль</p>
+            <p
+              className={`text text_type_main-medium ${locationName === 'profile' ? '' : 'text_color_inactive'}`}
+              onClick={() => navigate('/profile')}
+            >
+              Профиль
+            </p>
           </li>
           <li className="flex ai-center">
-            <p className="text text_type_main-medium text_color_inactive">История заказов</p>
+            <p
+              className={`text text_type_main-medium ${locationName === 'orders' ? '' : 'text_color_inactive'}`}
+              onClick={() => navigate('/profile/orders')}
+            >
+              История заказов
+            </p>
           </li>
           <li className="flex ai-center">
             <p className="text text_type_main-medium text_color_inactive" onClick={logout}>
@@ -125,72 +53,17 @@ export const Profile = () => {
           В этом разделе вы можете изменить свои персональные данные
         </p>
       </div>
-      <div className={`${profileStyles['auth-container']} flex flex-column ta-center`}>
-        <div className="mb-6">
-          <Input
-            type={'text'}
-            disabled={form.name.disabled}
-            placeholder={'Имя'}
-            onChange={(val) => onChange('name', val)}
-            icon={form.name.disabled ? 'EditIcon' : 'CloseIcon'}
-            value={form.name.value}
-            name={'name'}
-            error={form.name.error}
-            ref={nameRef}
-            errorText={'Введите имя'}
-            onIconClick={() => onIconClick('name')}
-            size={'default'}
-          />
-        </div>
-        <div className="mb-6">
-          <Input
-            type={'email'}
-            disabled={form.email.disabled}
-            placeholder={'Логин'}
-            onChange={(val) => onChange('email', val)}
-            icon={form.email.disabled ? 'EditIcon' : 'CloseIcon'}
-            value={form.email.value}
-            name={'email'}
-            error={form.email.error}
-            ref={emailRef}
-            errorText={'Введите валидный email'}
-            onIconClick={() => onIconClick('email')}
-            size={'default'}
-          />
-        </div>
-        <div className="mb-6">
-          <Input
-            type={'password'}
-            disabled={form.password.disabled}
-            placeholder={'Пароль'}
-            onChange={(val) => onChange('password', val)}
-            icon={form.password.disabled ? 'EditIcon' : 'CloseIcon'}
-            value={form.password.value}
-            name={'password'}
-            error={form.password.error}
-            ref={passwordRef}
-            onIconClick={() => onIconClick('password')}
-            errorText={'Введите пароль'}
-            size={'default'}
-          />
-        </div>
-        {Object.keys(changedFields()).length > 0 && (
-          <div className="flex ai-center">
-            <Button type="secondary" size="large" onClick={resetForm}>
-              Отменить
-            </Button>
-            <Button type="primary" size="large" onClick={saveUserInfo}>
-              Сохранить
-            </Button>
-          </div>
-        )}
-        {isError && (
-          <div className="mb-4 jc-center">
-            <p className={`${profileStyles['text_decoration_none']} text text_type_main-default text_color_error`}>
-              Возникла ошибка при обновлении, проверьте правильность заполненных полей!
-            </p>
-          </div>
-        )}
+      <div
+        className={`${
+          locationName === 'profile' ? `${profileStyles['auth-container']} ta-center` : ''
+        } flex flex-column`}
+      >
+        <Routes>
+          <Route index element={<ProfileSettings />} />
+          <Route path="/orders">
+            <Route index element={<ProfileOrder needStatus />} />
+          </Route>
+        </Routes>
       </div>
     </div>
   );

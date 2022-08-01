@@ -1,11 +1,11 @@
 import { MouseEvent as ReactMouseEvent, MouseEventHandler, useCallback, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 
-import ModalOverlay from '../modal-overlay/modal-overlay';
+import ModalOverlay from '../overlay';
 
 import { CloseIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 
-import withModalStyles from './modal.module.scss';
+import withModalStyles from '../modal.module.scss';
 
 type TIconEvent = () => void;
 type TKeyboardEvent = (e: KeyboardEvent) => void;
@@ -19,7 +19,7 @@ type Props = {
 
 const modalRoot = document.getElementById('modal-root') as HTMLElement;
 
-const Modal = ({ children, header, onClose }: Props) => {
+const ModalCommon = ({ children, header, onClose }: Props) => {
   const handleEscape = useCallback(
     (e: KeyboardEvent) => {
       if (e.code === 'Escape' || e.key === 'Escape') {
@@ -62,4 +62,4 @@ const Modal = ({ children, header, onClose }: Props) => {
   );
 };
 
-export default Modal;
+export default ModalCommon;

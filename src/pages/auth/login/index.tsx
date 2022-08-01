@@ -1,4 +1,4 @@
-import { SyntheticEvent, useRef, useState } from 'react';
+import { SyntheticEvent, useEffect, useRef, useState } from 'react';
 import { Input, Button } from '@ya.praktikum/react-developer-burger-ui-components';
 
 import authModules from '../auth.module.scss';
@@ -6,8 +6,11 @@ import { Link } from 'react-router-dom';
 import { useLoginMutation } from '../../../store/services/auth';
 import { useAuth } from '../../../hooks/use-auth';
 import { profile } from '../../../interfaces/profile';
+import { useAppDispatch } from '../../../hooks/use-store';
+import { setIsCenter } from '../../../store/reducers/baseSlice';
 
 export const Login = () => {
+  const dispatch = useAppDispatch();
   const [form, setForm] = useState<profile.authForm<'email' | 'password'>>({
     email: {
       value: '',
@@ -24,6 +27,11 @@ export const Login = () => {
   const passwordRef = useRef<HTMLInputElement>(null);
   const [login, { isLoading, isError }] = useLoginMutation();
   const { setUserInfo } = useAuth();
+
+  useEffect(() => {
+    dispatch(setIsCenter(true));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const onIconClick = () => {
     setType(type === 'password' ? 'text' : 'password');

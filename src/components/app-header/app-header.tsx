@@ -45,8 +45,16 @@ const AppHeader = () => {
             </Link>
           </li>
           <li className="flex ml-2 pl-5 pr-5 pt-4 pb-4">
-            <ListIcon type="secondary" />
-            <p className="text text_type_main-default pl-2">Лента заказа</p>
+            <Link to="/feed" className={`${appHeaderStyles.link} flex js-center ai-center`}>
+              <ListIcon type={currentLocation === 'feed' ? 'primary' : 'secondary'} />
+              <p
+                className={`text_color_${
+                  currentLocation === 'feed' ? 'primary' : 'inactive'
+                } text text_type_main-default pl-2`}
+              >
+                Лента заказа
+              </p>
+            </Link>
           </li>
         </ul>
         <p className={appHeaderStyles.logo}>

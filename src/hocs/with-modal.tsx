@@ -1,5 +1,5 @@
 import { Component, ComponentType, MouseEventHandler } from 'react';
-import Modal from '../components/modal/modal';
+import ModalCommon from '../components/modal/common';
 import { ingredients } from '../interfaces/ingredients';
 import { order } from '../interfaces/order';
 
@@ -16,7 +16,7 @@ const withModal = (WrappedComponent: ComponentType<{ ingredient?: ingredients.in
     render() {
       return (
         this.props.openModal && (
-          <Modal header={this.props.header} onClose={this.props.onClose}>
+          <ModalCommon header={this.props.header} onClose={this.props.onClose}>
             {this.props.ingredient ? (
               <WrappedComponent ingredient={this.props.ingredient} />
             ) : this.props.order ? (
@@ -24,7 +24,7 @@ const withModal = (WrappedComponent: ComponentType<{ ingredient?: ingredients.in
             ) : (
               <WrappedComponent />
             )}
-          </Modal>
+          </ModalCommon>
         )
       );
     }

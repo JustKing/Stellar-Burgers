@@ -11,8 +11,8 @@ const IngredientDetails = memo(() => {
   const background = location.state && (location.state as any).background;
 
   useEffect(() => {
-    const partOfPathName = location.pathname.split('/');
-    const id = partOfPathName[partOfPathName.length - 1];
+    const partsOfPathName = location.pathname.split('/');
+    const id = partsOfPathName[partsOfPathName.length - 1];
     if (id) {
       const currentIngredient = data.find((ingredient) => ingredient._id === id);
       if (currentIngredient) {

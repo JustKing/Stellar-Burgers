@@ -1,4 +1,5 @@
 import { profile } from './profile';
+import { order } from './order';
 
 export namespace api {
   export namespace response {
@@ -13,6 +14,13 @@ export namespace api {
         number: number;
       };
       success: boolean;
+    }
+
+    export interface orders {
+      success: boolean;
+      orders: order.orderInList[];
+      total: number;
+      totalToday: number;
     }
 
     export namespace auth {

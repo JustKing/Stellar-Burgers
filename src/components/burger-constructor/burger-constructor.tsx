@@ -53,7 +53,7 @@ const BurgerConstructor = () => {
             ) : (
               <BurgerConstructorPlug type="top" isLocked />
             )}
-            <div className={`${burgerConstructorStyles.structure} flex flex-column`}>
+            <div className={`${burgerConstructorStyles.structure} scroll flex flex-column`}>
               {burger.main.length > 0 ? (
                 burger.main.map(
                   (ingredient, key) =>

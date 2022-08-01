@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import { Layout } from '../layout';
-import Modal from '../modalOutlet/modal';
+import ModalIngredients from '../modal/ingredient';
 import { ProtectedRoute } from '../protected-route/protected-route';
 import { useAuth } from '../../hooks/use-auth';
 import { useCookie } from '../../hooks/use-cookie';
@@ -10,8 +10,11 @@ import { ForgotPassword, Login, Register, ResetPassword } from '../../pages/auth
 import { Constructor } from '../../pages/constructor/constructor';
 import { Ingredient } from '../../pages/ingredient';
 import { Profile } from '../../pages/profile';
+import { Feed } from '../../pages/feed';
 import { setUser } from '../../store/reducers/profileSlice';
 import { useGetUserInfoQuery } from '../../store/services/auth';
+import ModalOrder from '../modal/order/order';
+import { OrdersDetail } from '../orders/detail';
 
 const App = () => {
   const [loading, setLoading] = useState<boolean>(true);
@@ -66,9 +69,14 @@ const App = () => {
     <Routes>
       <Route path="/" element={<Layout />}>
         <Route index element={<Constructor />} />
-        <Route path="/ingredients/:id" element={background ? <Modal /> : <Ingredient />} />
+        <Route path="/ingredients/:id" element={background ? <ModalIngredients /> : <Ingredient />} />
         <Route element={<ProtectedRoute />}>
-          <Route path="/profile" element={<Profile />} />
+          <Route path="/profile/orders/:id" element={background ? <ModalOrder /> : <OrdersDetail />} />
+          <Route path="/profile/*" element={<Profile />} />
+        </Route>
+        <Route path="/feed">
+          <Route index element={<Feed />} />
+          <Route path=":id" element={background ? <ModalOrder /> : <OrdersDetail />} />
         </Route>
         <Route element={<ProtectedRoute anonymous />}>
           <Route path="/login" element={<Login />} />
