@@ -1,0 +1,7 @@
+{
+  "extends": "../tsconfig.json",
+  "include": [
+    "../node_modules/cypress",
+    "*/*.ts"
+, "plugins/cy-ts-preprocessor.js", "plugins/index.js"  ]
+}

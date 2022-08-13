@@ -47,7 +47,7 @@ const BurgerConstructor = () => {
     <div className={`${burgerConstructorStyles.constructor} flex flex-column ml-5 mt-15 pr-4 pl-4`} ref={drop}>
       {burger && (
         <>
-          <div className="mb-10 flex flex-column" style={{ height: `calc(100% - ${offset}px - ${gap}` }}>
+          <div id="constructor" className="mb-10 flex flex-column" style={{ height: `calc(100% - ${offset}px - ${gap}` }}>
             {burger.bun._id ? (
               <BurgerConstructorElement isLocked ingredient={burger.bun} type="top" handleClose={handleRemoveBun} />
             ) : (

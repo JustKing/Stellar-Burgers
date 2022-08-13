@@ -9,13 +9,21 @@
 ## Описание
 
 Проектная работа 15 когорты yandex practicum.\
-Опубликованая бургерная [тык](https://jst-stellar-burger.netlify.app/)
+Опубликованная бургерная [netlify](https://jst-stellar-burger.netlify.app/), [gh-pages](https://justking.github.io/Stellar-Burgers/#)
 
 ### `yarn start`
 
 Запуск приложения в режиме разработчика\
 Откройте [http://localhost:3000](http://localhost:3000) в браузере.
 
+#### `yarn cy-test`
+
+e2e тестирование - требует запущенное локально приложения
+
 ### `yarn build`
 
 Сборка приложения
+
+### `yarn test`
+
+Тестирование
